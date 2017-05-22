@@ -14,11 +14,6 @@
 		2343B1D5199A776A00349048 /* ZSSinsertkeyword.png in Resources */ = {isa = PBXBuildFile; fileRef = 2343B1D3199A776A00349048 /* ZSSinsertkeyword.png */; };
 		2343B1D6199A776A00349048 /* ZSSinsertkeyword@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2343B1D4199A776A00349048 /* ZSSinsertkeyword@2x.png */; };
 		2343B1DA199B2C9300349048 /* ZSSDemoList.m in Sources */ = {isa = PBXBuildFile; fileRef = 2343B1D9199B2C9300349048 /* ZSSDemoList.m */; };
-		2343B1DD199B34B500349048 /* ZSSColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2343B1DC199B34B500349048 /* ZSSColorViewController.m */; };
-		2343B1E0199BE4D000349048 /* ZSSLargeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2343B1DF199BE4D000349048 /* ZSSLargeViewController.m */; };
-		2343B229199D237100349048 /* ZSSPlaceholderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2343B228199D237100349048 /* ZSSPlaceholderViewController.m */; };
-		2343B22C199D6D6400349048 /* ZSSSelectiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2343B22B199D6D6400349048 /* ZSSSelectiveViewController.m */; };
-		2343B22F199D6E6700349048 /* ZSSCustomButtonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2343B22E199D6E6700349048 /* ZSSCustomButtonsViewController.m */; };
 		23A76DC4187532F1000169F6 /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 23A76DC2187532F1000169F6 /* editor.html */; };
 		23A76DC61875345B000169F6 /* ZSSRichTextEditor.js in Resources */ = {isa = PBXBuildFile; fileRef = 23A76DC3187532F1000169F6 /* ZSSRichTextEditor.js */; };
 		4513B3D8184E8F5100A9CA86 /* ZSSBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4513B3D7184E8F5100A9CA86 /* ZSSBarButtonItem.m */; };
@@ -30,7 +25,6 @@
 		4581EB8A1848457A0048CAB0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4581EB881848457A0048CAB0 /* InfoPlist.strings */; };
 		4581EB8C1848457A0048CAB0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581EB8B1848457A0048CAB0 /* main.m */; };
 		4581EB901848457A0048CAB0 /* ZSSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581EB8F1848457A0048CAB0 /* ZSSAppDelegate.m */; };
-		4581EBB81848F8190048CAB0 /* ZSSDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581EBB71848F8190048CAB0 /* ZSSDemoViewController.m */; };
 		4581EBBB184B0F5C0048CAB0 /* ZSSRichTextEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581EBBA184B0F5C0048CAB0 /* ZSSRichTextEditor.m */; };
 		45A0CA3B18A8521600F3F35E /* CYRLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A0CA3418A8521600F3F35E /* CYRLayoutManager.m */; };
 		45A0CA3C18A8521600F3F35E /* CYRTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A0CA3618A8521600F3F35E /* CYRTextStorage.m */; };
@@ -79,7 +73,6 @@
 		45F73D4B18D7AE9700CD6DBA /* ZSSunlink.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F73D2818D7AE9700CD6DBA /* ZSSunlink.png */; };
 		45F73D4C18D7AE9700CD6DBA /* ZSSunorderedlist.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F73D2918D7AE9700CD6DBA /* ZSSunorderedlist.png */; };
 		45F73D4D18D7AE9700CD6DBA /* ZSSviewsource.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F73D2A18D7AE9700CD6DBA /* ZSSviewsource.png */; };
-		45F80458189B1E9300A1EDD9 /* ZSSDemoPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F80457189B1E9300A1EDD9 /* ZSSDemoPickerViewController.m */; };
 		45F860A718A84CFA0011266B /* ZSSbgcolor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F8608518A84CF90011266B /* ZSSbgcolor@2x.png */; };
 		45F860A818A84CFA0011266B /* ZSSbold@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F8608618A84CF90011266B /* ZSSbold@2x.png */; };
 		45F860A918A84CFA0011266B /* ZSScenterjustify@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F8608718A84CF90011266B /* ZSScenterjustify@2x.png */; };
@@ -116,7 +109,6 @@
 		45F860C818A84CFA0011266B /* ZSSviewsource@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F860A618A84CFA0011266B /* ZSSviewsource@2x.png */; };
 		DB1D27A21D79EC1700EC1CBD /* ZSSimageDevice.png in Resources */ = {isa = PBXBuildFile; fileRef = DB1D27A01D79EC1700EC1CBD /* ZSSimageDevice.png */; };
 		DB1D27A31D79EC1700EC1CBD /* ZSSimageDevice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DB1D27A11D79EC1700EC1CBD /* ZSSimageDevice@2x.png */; };
-		DB1D27A61D79F62D00EC1CBD /* DemoModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB1D27A51D79F62D00EC1CBD /* DemoModalViewController.m */; };
 		DB703BB11D7B2FEA0013C608 /* jQuery.js in Resources */ = {isa = PBXBuildFile; fileRef = DB703BB01D7B2FEA0013C608 /* jQuery.js */; };
 		DB703BB31D7B31D10013C608 /* JSBeautifier.js in Resources */ = {isa = PBXBuildFile; fileRef = DB703BB21D7B31D10013C608 /* JSBeautifier.js */; };
 		DB703BB61D7B73600013C608 /* ZSSFontsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB703BB51D7B73600013C608 /* ZSSFontsViewController.m */; };
@@ -133,16 +125,6 @@
 		2343B1D4199A776A00349048 /* ZSSinsertkeyword@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ZSSinsertkeyword@2x.png"; path = "Source/Images/ZSSinsertkeyword@2x.png"; sourceTree = "<group>"; };
 		2343B1D8199B2C9300349048 /* ZSSDemoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSDemoList.h; path = Classes/ZSSDemoList.h; sourceTree = "<group>"; };
 		2343B1D9199B2C9300349048 /* ZSSDemoList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSDemoList.m; path = Classes/ZSSDemoList.m; sourceTree = "<group>"; };
-		2343B1DB199B34B500349048 /* ZSSColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSColorViewController.h; path = Classes/ZSSColorViewController.h; sourceTree = "<group>"; };
-		2343B1DC199B34B500349048 /* ZSSColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSColorViewController.m; path = Classes/ZSSColorViewController.m; sourceTree = "<group>"; };
-		2343B1DE199BE4D000349048 /* ZSSLargeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSLargeViewController.h; path = Classes/ZSSLargeViewController.h; sourceTree = "<group>"; };
-		2343B1DF199BE4D000349048 /* ZSSLargeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSLargeViewController.m; path = Classes/ZSSLargeViewController.m; sourceTree = "<group>"; };
-		2343B227199D237100349048 /* ZSSPlaceholderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSPlaceholderViewController.h; path = Classes/ZSSPlaceholderViewController.h; sourceTree = "<group>"; };
-		2343B228199D237100349048 /* ZSSPlaceholderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSPlaceholderViewController.m; path = Classes/ZSSPlaceholderViewController.m; sourceTree = "<group>"; };
-		2343B22A199D6D6400349048 /* ZSSSelectiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSSelectiveViewController.h; path = Classes/ZSSSelectiveViewController.h; sourceTree = "<group>"; };
-		2343B22B199D6D6400349048 /* ZSSSelectiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSSelectiveViewController.m; path = Classes/ZSSSelectiveViewController.m; sourceTree = "<group>"; };
-		2343B22D199D6E6700349048 /* ZSSCustomButtonsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSCustomButtonsViewController.h; path = Classes/ZSSCustomButtonsViewController.h; sourceTree = "<group>"; };
-		2343B22E199D6E6700349048 /* ZSSCustomButtonsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSCustomButtonsViewController.m; path = Classes/ZSSCustomButtonsViewController.m; sourceTree = "<group>"; };
 		23A76DC2187532F1000169F6 /* editor.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = editor.html; path = Source/editor.html; sourceTree = "<group>"; };
 		23A76DC3187532F1000169F6 /* ZSSRichTextEditor.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = ZSSRichTextEditor.js; path = Source/ZSSRichTextEditor.js; sourceTree = "<group>"; };
 		4513B3D6184E8F5100A9CA86 /* ZSSBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSBarButtonItem.h; path = Source/ZSSBarButtonItem.h; sourceTree = "<group>"; };
@@ -162,8 +144,6 @@
 		4581EB8F1848457A0048CAB0 /* ZSSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ZSSAppDelegate.m; path = Classes/ZSSAppDelegate.m; sourceTree = "<group>"; };
 		4581EB981848457A0048CAB0 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		4581EBAE1848459F0048CAB0 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		4581EBB61848F8190048CAB0 /* ZSSDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSDemoViewController.h; path = Classes/ZSSDemoViewController.h; sourceTree = "<group>"; };
-		4581EBB71848F8190048CAB0 /* ZSSDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSDemoViewController.m; path = Classes/ZSSDemoViewController.m; sourceTree = "<group>"; };
 		4581EBB9184B0F5C0048CAB0 /* ZSSRichTextEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSRichTextEditor.h; path = Source/ZSSRichTextEditor.h; sourceTree = "<group>"; };
 		4581EBBA184B0F5C0048CAB0 /* ZSSRichTextEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSRichTextEditor.m; path = Source/ZSSRichTextEditor.m; sourceTree = "<group>"; };
 		45A0CA3318A8521600F3F35E /* CYRLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CYRLayoutManager.h; path = "ZSSRichTextEditor/Source/Third Party/CYRLayoutManager.h"; sourceTree = SOURCE_ROOT; };
@@ -224,8 +204,6 @@
 		45F73D2818D7AE9700CD6DBA /* ZSSunlink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ZSSunlink.png; path = Source/Images/ZSSunlink.png; sourceTree = "<group>"; };
 		45F73D2918D7AE9700CD6DBA /* ZSSunorderedlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ZSSunorderedlist.png; path = Source/Images/ZSSunorderedlist.png; sourceTree = "<group>"; };
 		45F73D2A18D7AE9700CD6DBA /* ZSSviewsource.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ZSSviewsource.png; path = Source/Images/ZSSviewsource.png; sourceTree = "<group>"; };
-		45F80456189B1E9300A1EDD9 /* ZSSDemoPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSDemoPickerViewController.h; path = Classes/ZSSDemoPickerViewController.h; sourceTree = "<group>"; };
-		45F80457189B1E9300A1EDD9 /* ZSSDemoPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSDemoPickerViewController.m; path = Classes/ZSSDemoPickerViewController.m; sourceTree = "<group>"; };
 		45F8608518A84CF90011266B /* ZSSbgcolor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ZSSbgcolor@2x.png"; path = "Source/Images/ZSSbgcolor@2x.png"; sourceTree = "<group>"; };
 		45F8608618A84CF90011266B /* ZSSbold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ZSSbold@2x.png"; path = "Source/Images/ZSSbold@2x.png"; sourceTree = "<group>"; };
 		45F8608718A84CF90011266B /* ZSScenterjustify@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ZSScenterjustify@2x.png"; path = "Source/Images/ZSScenterjustify@2x.png"; sourceTree = "<group>"; };
@@ -262,8 +240,6 @@
 		45F860A618A84CFA0011266B /* ZSSviewsource@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ZSSviewsource@2x.png"; path = "Source/Images/ZSSviewsource@2x.png"; sourceTree = "<group>"; };
 		DB1D27A01D79EC1700EC1CBD /* ZSSimageDevice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ZSSimageDevice.png; path = Source/Images/ZSSimageDevice.png; sourceTree = "<group>"; };
 		DB1D27A11D79EC1700EC1CBD /* ZSSimageDevice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ZSSimageDevice@2x.png"; path = "Source/Images/ZSSimageDevice@2x.png"; sourceTree = "<group>"; };
-		DB1D27A41D79F62D00EC1CBD /* DemoModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoModalViewController.h; sourceTree = "<group>"; };
-		DB1D27A51D79F62D00EC1CBD /* DemoModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoModalViewController.m; sourceTree = "<group>"; };
 		DB703BB01D7B2FEA0013C608 /* jQuery.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jQuery.js; path = Source/jQuery.js; sourceTree = "<group>"; };
 		DB703BB21D7B31D10013C608 /* JSBeautifier.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = JSBeautifier.js; path = Source/JSBeautifier.js; sourceTree = "<group>"; };
 		DB703BB41D7B73600013C608 /* ZSSFontsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSFontsViewController.h; path = Source/ZSSFontsViewController.h; sourceTree = "<group>"; };
@@ -289,24 +265,8 @@
 		2343B1D7199B2C3C00349048 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				4581EBB61848F8190048CAB0 /* ZSSDemoViewController.h */,
-				4581EBB71848F8190048CAB0 /* ZSSDemoViewController.m */,
-				45F80456189B1E9300A1EDD9 /* ZSSDemoPickerViewController.h */,
-				45F80457189B1E9300A1EDD9 /* ZSSDemoPickerViewController.m */,
 				2343B1D8199B2C9300349048 /* ZSSDemoList.h */,
 				2343B1D9199B2C9300349048 /* ZSSDemoList.m */,
-				2343B1DB199B34B500349048 /* ZSSColorViewController.h */,
-				2343B1DC199B34B500349048 /* ZSSColorViewController.m */,
-				2343B1DE199BE4D000349048 /* ZSSLargeViewController.h */,
-				2343B1DF199BE4D000349048 /* ZSSLargeViewController.m */,
-				2343B227199D237100349048 /* ZSSPlaceholderViewController.h */,
-				2343B228199D237100349048 /* ZSSPlaceholderViewController.m */,
-				2343B22A199D6D6400349048 /* ZSSSelectiveViewController.h */,
-				2343B22B199D6D6400349048 /* ZSSSelectiveViewController.m */,
-				2343B22D199D6E6700349048 /* ZSSCustomButtonsViewController.h */,
-				2343B22E199D6E6700349048 /* ZSSCustomButtonsViewController.m */,
-				DB1D27A41D79F62D00EC1CBD /* DemoModalViewController.h */,
-				DB1D27A51D79F62D00EC1CBD /* DemoModalViewController.m */,
 			);
 			name = Demo;
 			sourceTree = "<group>";
@@ -690,27 +650,19 @@
 			files = (
 				45A0CA4F18A8522A00F3F35E /* HRColorPickerView.m in Sources */,
 				2343B1DA199B2C9300349048 /* ZSSDemoList.m in Sources */,
-				2343B22F199D6E6700349048 /* ZSSCustomButtonsViewController.m in Sources */,
-				2343B22C199D6D6400349048 /* ZSSSelectiveViewController.m in Sources */,
 				4552C491189A094C004EF847 /* ZSSTextView.m in Sources */,
 				45A0CA4D18A8522A00F3F35E /* HRCgUtil.m in Sources */,
 				45A0CA5018A8522A00F3F35E /* HRColorPickerViewController.m in Sources */,
-				2343B1E0199BE4D000349048 /* ZSSLargeViewController.m in Sources */,
 				45A0CA4C18A8522A00F3F35E /* HRBrightnessCursor.m in Sources */,
 				4581EB8C1848457A0048CAB0 /* main.m in Sources */,
 				45A0CA3C18A8521600F3F35E /* CYRTextStorage.m in Sources */,
-				2343B1DD199B34B500349048 /* ZSSColorViewController.m in Sources */,
 				4581EB901848457A0048CAB0 /* ZSSAppDelegate.m in Sources */,
 				45A0CA3E18A8521600F3F35E /* CYRToken.m in Sources */,
 				4581EBBB184B0F5C0048CAB0 /* ZSSRichTextEditor.m in Sources */,
-				2343B229199D237100349048 /* ZSSPlaceholderViewController.m in Sources */,
 				45A0CA5118A8522A00F3F35E /* HRColorUtil.m in Sources */,
 				45A0CA3D18A8521600F3F35E /* CYRTextView.m in Sources */,
 				45A0CA3B18A8521600F3F35E /* CYRLayoutManager.m in Sources */,
 				45A0CA4E18A8522A00F3F35E /* HRColorCursor.m in Sources */,
-				4581EBB81848F8190048CAB0 /* ZSSDemoViewController.m in Sources */,
-				DB1D27A61D79F62D00EC1CBD /* DemoModalViewController.m in Sources */,
-				45F80458189B1E9300A1EDD9 /* ZSSDemoPickerViewController.m in Sources */,
 				4513B3D8184E8F5100A9CA86 /* ZSSBarButtonItem.m in Sources */,
 				DB703BB61D7B73600013C608 /* ZSSFontsViewController.m in Sources */,
 			);
