@@ -10,4 +10,14 @@
 
 @implementation ZSSBarButtonItem
 
++ (ZSSBarButtonItem *)barButtonItemForDefaultType:(NSString *)defaultType
+{
+    return nil;
+}
+
++ (UIImage *)barButtonItemImageForDefaultType:(NSString *)defaultType
+{
+    return nil;
+}
+
 @end
