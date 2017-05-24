@@ -83,7 +83,7 @@ static Class hackishFixClass = Nil;
 @end
 
 
-@interface ZSSRichTextEditor () <UIWebViewDelegate, HRColorPickerViewControllerDelegate, UITextViewDelegate>
+@interface ZSSRichTextEditor () <UIWebViewDelegate, HRColorPickerViewControllerDelegate>
 
 /*
  *  Scroll view containing the toolbar
@@ -104,11 +104,6 @@ static Class hackishFixClass = Nil;
  *  UIWebView for writing/editing/displaying the content
  */
 @property (nonatomic, strong) UIWebView *editorView;
-
-/*
- *  Array holding the enabled editor items
- */
-@property (nonatomic, strong) NSArray *editorItemsEnabled;
 
 /*
  *  NSString holding the selected links URL value
@@ -304,330 +299,11 @@ static Class hackishFixClass = Nil;
 }
 
 - (NSArray *)itemsForToolbar {
-    
+
     //Define correct bundle for loading resources
     NSBundle* bundle = [NSBundle bundleForClass:[ZSSRichTextEditor class]];
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    // Bold
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarBold]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *bold = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSbold.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setBold)];
-//        bold.label = @"bold";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarBold] withObject:bold];
-//        } else {
-//            [items addObject:bold];
-//        }
-//    }
-//    
-//    // Italic
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarItalic]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *italic = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSitalic.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setItalic)];
-//        italic.label = @"italic";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarItalic] withObject:italic];
-//        } else {
-//            [items addObject:italic];
-//        }
-//    }
-//    
-//    // Subscript
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarSubscript]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *subscript = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSsubscript.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setSubscript)];
-//        subscript.label = @"subscript";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarSubscript] withObject:subscript];
-//        } else {
-//            [items addObject:subscript];
-//        }
-//    }
-//    
-//    // Superscript
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarSuperscript]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *superscript = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSsuperscript.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setSuperscript)];
-//        superscript.label = @"superscript";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarSuperscript] withObject:superscript];
-//        } else {
-//            [items addObject:superscript];
-//        }
-//    }
-//    
-//    // Strike Through
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarStrikeThrough]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *strikeThrough = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSstrikethrough.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setStrikethrough)];
-//        strikeThrough.label = @"strikeThrough";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarStrikeThrough] withObject:strikeThrough];
-//        } else {
-//            [items addObject:strikeThrough];
-//        }
-//    }
-//    
-//    // Underline
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarUnderline]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *underline = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSunderline.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setUnderline)];
-//        underline.label = @"underline";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarUnderline] withObject:underline];
-//        } else {
-//            [items addObject:underline];
-//        }
-//    }
-//    
-//    // Remove Format
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarRemoveFormat]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *removeFormat = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSclearstyle.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(removeFormat)];
-//        removeFormat.label = @"removeFormat";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarRemoveFormat] withObject:removeFormat];
-//        } else {
-//            [items addObject:removeFormat];
-//        }
-//    }
-//
-//    // Undo
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarUndo]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *undoButton = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSundo.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(undo:)];
-//        undoButton.label = @"undo";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarUndo] withObject:undoButton];
-//        } else {
-//            [items addObject:undoButton];
-//        }
-//    }
-//    
-//    // Redo
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarRedo]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *redoButton = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSredo.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(redo:)];
-//        redoButton.label = @"redo";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarRedo] withObject:redoButton];
-//        } else {
-//            [items addObject:redoButton];
-//        }
-//    }
-//    
-//    // Align Left
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarJustifyLeft]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *alignLeft = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSleftjustify.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(alignLeft)];
-//        alignLeft.label = @"justifyLeft";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarJustifyLeft] withObject:alignLeft];
-//        } else {
-//            [items addObject:alignLeft];
-//        }
-//    }
-//    
-//    // Align Center
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarJustifyCenter]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *alignCenter = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSScenterjustify.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(alignCenter)];
-//        alignCenter.label = @"justifyCenter";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarJustifyCenter] withObject:alignCenter];
-//        } else {
-//            [items addObject:alignCenter];
-//        }
-//    }
-//    
-//    // Align Right
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarJustifyRight]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *alignRight = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSrightjustify.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(alignRight)];
-//        alignRight.label = @"justifyRight";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarJustifyRight] withObject:alignRight];
-//        } else {
-//            [items addObject:alignRight];
-//        }
-//    }
-//    
-//    // Align Justify
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarJustifyFull]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *alignFull = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSforcejustify.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(alignFull)];
-//        alignFull.label = @"justifyFull";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarJustifyFull] withObject:alignFull];
-//        } else {
-//            [items addObject:alignFull];
-//        }
-//    }
-//    
-//    // Paragraph
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarParagraph]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *paragraph = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSparagraph.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(paragraph)];
-//        paragraph.label = @"p";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarParagraph] withObject:paragraph];
-//        } else {
-//            [items addObject:paragraph];
-//        }
-//    }
-//    
-//    // Header 1
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarH1]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *h1 = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh1.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(heading1)];
-//        h1.label = @"h1";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarH1] withObject:h1];
-//        } else {
-//            [items addObject:h1];
-//        }
-//    }
-//    
-//    // Header 2
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarH2]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *h2 = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh2.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(heading2)];
-//        h2.label = @"h2";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarH2] withObject:h2];
-//        } else {
-//            [items addObject:h2];
-//        }
-//    }
-//    
-//    // Header 3
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarH3]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *h3 = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh3.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(heading3)];
-//        h3.label = @"h3";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarH3] withObject:h3];
-//        } else {
-//            [items addObject:h3];
-//        }
-//    }
-//    
-//    // Heading 4
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarH4]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *h4 = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh4.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(heading4)];
-//        h4.label = @"h4";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarH4] withObject:h4];
-//        } else {
-//            [items addObject:h4];
-//        }
-//    }
-//    
-//    // Header 5
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarH5]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *h5 = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh5.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(heading5)];
-//        h5.label = @"h5";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarH5] withObject:h5];
-//        } else {
-//            [items addObject:h5];
-//        }
-//    }
-//    
-//    // Heading 6
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarH6]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *h6 = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh6.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(heading6)];
-//        h6.label = @"h6";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarH6] withObject:h6];
-//        } else {
-//            [items addObject:h6];
-//        }
-//    }
-//    
-//    // Text Color
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarTextColor]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *textColor = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSStextcolor.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(textColor)];
-//        textColor.label = @"textColor";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarTextColor] withObject:textColor];
-//        } else {
-//            [items addObject:textColor];
-//        }
-//    }
-//
-//    // Unordered List
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarUnorderedList]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *ul = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSunorderedlist.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setUnorderedList)];
-//        ul.label = @"unorderedList";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarUnorderedList] withObject:ul];
-//        } else {
-//            [items addObject:ul];
-//        }
-//    }
-//    
-//    // Ordered List
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarOrderedList]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *ol = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSorderedlist.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setOrderedList)];
-//        ol.label = @"orderedList";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarOrderedList] withObject:ol];
-//        } else {
-//            [items addObject:ol];
-//        }
-//    }
-//    
-//    // Horizontal Rule
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarHorizontalRule]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *hr = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSShorizontalrule.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setHR)];
-//        hr.label = @"horizontalRule";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarHorizontalRule] withObject:hr];
-//        } else {
-//            [items addObject:hr];
-//        }
-//    }
-//    
-//    // Indent
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarIndent]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *indent = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSindent.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setIndent)];
-//        indent.label = @"indent";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarIndent] withObject:indent];
-//        } else {
-//            [items addObject:indent];
-//        }
-//    }
-//    
-//    // Outdent
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarOutdent]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *outdent = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSoutdent.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(setOutdent)];
-//        outdent.label = @"outdent";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarOutdent] withObject:outdent];
-//        } else {
-//            [items addObject:outdent];
-//        }
-//    }
-//
-//    // Insert Link
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarInsertLink]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *insertLink = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSlink.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(insertLink)];
-//        insertLink.label = @"link";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarInsertLink] withObject:insertLink];
-//        } else {
-//            [items addObject:insertLink];
-//        }
-//    }
-//    
-//    // Remove Link
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarRemoveLink]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *removeLink = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSunlink.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(removeLink)];
-//        removeLink.label = @"removeLink";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarRemoveLink] withObject:removeLink];
-//        } else {
-//            [items addObject:removeLink];
-//        }
-//    }
-//    
-//    // Quick Link
-//    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarQuickLink]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
-//        ZSSBarButtonItem *quickLink = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSquicklink.png" inBundle:bundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(quickLink)];
-//        quickLink.label = @"quickLink";
-//        if (customOrder) {
-//            [items replaceObjectAtIndex:[_enabledToolbarItems indexOfObject:ZSSRichTextEditorToolbarQuickLink] withObject:quickLink];
-//        } else {
-//            [items addObject:quickLink];
-//        }
-//    }
 
     return [NSArray arrayWithArray:items];
 }
@@ -758,118 +434,8 @@ static Class hackishFixClass = Nil;
     [self endEditing:YES];
 }
 
-- (void)removeFormat {
-    NSString *trigger = @"zss_editor.removeFormating();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)alignLeft {
-    NSString *trigger = @"zss_editor.setJustifyLeft();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)alignCenter {
-    NSString *trigger = @"zss_editor.setJustifyCenter();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)alignRight {
-    NSString *trigger = @"zss_editor.setJustifyRight();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)alignFull {
-    NSString *trigger = @"zss_editor.setJustifyFull();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setBold {
-    NSString *trigger = @"zss_editor.setBold();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setItalic {
-    NSString *trigger = @"zss_editor.setItalic();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setSubscript {
-    NSString *trigger = @"zss_editor.setSubscript();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setUnderline {
-    NSString *trigger = @"zss_editor.setUnderline();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setSuperscript {
-    NSString *trigger = @"zss_editor.setSuperscript();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setStrikethrough {
-    NSString *trigger = @"zss_editor.setStrikeThrough();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setUnorderedList {
-    NSString *trigger = @"zss_editor.setUnorderedList();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setOrderedList {
-    NSString *trigger = @"zss_editor.setOrderedList();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setHR {
-    NSString *trigger = @"zss_editor.setHorizontalRule();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setIndent {
-    NSString *trigger = @"zss_editor.setIndent();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)setOutdent {
-    NSString *trigger = @"zss_editor.setOutdent();";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)heading1 {
-    NSString *trigger = @"zss_editor.setHeading('h1');";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)heading2 {
-    NSString *trigger = @"zss_editor.setHeading('h2');";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)heading3 {
-    NSString *trigger = @"zss_editor.setHeading('h3');";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)heading4 {
-    NSString *trigger = @"zss_editor.setHeading('h4');";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)heading5 {
-    NSString *trigger = @"zss_editor.setHeading('h5');";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)heading6 {
-    NSString *trigger = @"zss_editor.setHeading('h6');";
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-}
-
-- (void)paragraph {
-    NSString *trigger = @"zss_editor.setParagraph();";
+- (void)setHeading:(NSString *)heading {
+    NSString *trigger = [NSString stringWithFormat:@"zss_editor.setHeading('%@');", heading];
     [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
 }
 
@@ -896,24 +462,6 @@ static Class hackishFixClass = Nil;
         trigger = [NSString stringWithFormat:@"zss_editor.setBackgroundColor(\"%@\");", hex];
     }
     [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-    
-}
-
-- (void)undo:(ZSSBarButtonItem *)barButtonItem {
-    [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.undo();"];
-}
-
-- (void)redo:(ZSSBarButtonItem *)barButtonItem {
-    [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.redo();"];
-}
-
-- (void)insertLink {
-    
-    // Save the selection location
-    [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.prepareInsert();"];
-    
-    // Show the dialog for inserting or editing a link
-    [self showInsertLinkDialogWithLink:self.selectedLinkURL title:self.selectedLinkTitle];
 }
 
 - (void)showInsertLinkDialogWithLink:(NSString *)url title:(NSString *)title {
@@ -973,14 +521,6 @@ static Class hackishFixClass = Nil;
     [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
 }
 
-- (void)removeLink {
-    [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.unlink();"];
-}
-
-- (void)quickLink {
-    [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.quickLink();"];
-}
-
 - (void)updateToolBarWithButtonName:(NSString *)name {
     
     // Items that are enabled
@@ -1003,8 +543,6 @@ static Class hackishFixClass = Nil;
     }
     itemNames = [NSArray arrayWithArray:itemsModified];
     
-    self.editorItemsEnabled = itemNames;
-    
     // Highlight items
     NSArray *items = self.toolbar.items;
     for (ZSSBarButtonItem *item in items) {
@@ -1015,26 +553,6 @@ static Class hackishFixClass = Nil;
         }
     }
 }
-
-
-#pragma mark - UITextView Delegate
-
-- (void)textViewDidChange:(UITextView *)textView {
-    CGRect line = [textView caretRectForPosition:textView.selectedTextRange.start];
-    CGFloat overflow = line.origin.y + line.size.height - ( textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top );
-    if ( overflow > 0 ) {
-        // We are at the bottom of the visible text and introduced a line feed, scroll down (iOS 7 does not do it)
-        // Scroll caret to visible area
-        CGPoint offset = textView.contentOffset;
-        offset.y += overflow + 7; // leave 7 pixels margin
-        // Cannot animate with setContentOffset:animated: or caret will not appear
-        [UIView animateWithDuration:.2 animations:^{
-            [textView setContentOffset:offset];
-        }];
-    }
-    
-}
-
 
 #pragma mark - UIWebView Delegate
 
@@ -1168,6 +686,97 @@ static Class hackishFixClass = Nil;
     }
 }
 
+- (void)barButtonItemAction:(ZSSBarButtonItem *)sender
+{
+    switch (sender.itemType) {
+        case ZSSBarButtonItemTypeBold:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setBold();"];
+            break;
+        case ZSSBarButtonItemTypeItalic:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setItalic();"];
+            break;
+        case ZSSBarButtonItemTypeSubscript:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setSubscript();"];
+            break;
+        case ZSSBarButtonItemTypeSuperscript:
+            [self.editorView stringByEvaluatingJavaScriptFromString: @"zss_editor.setSuperscript();"];
+            break;
+        case ZSSBarButtonItemTypeStrikeThrough:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setStrikeThrough();"];
+            break;
+        case ZSSBarButtonItemTypeUnderline:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setUnderline();"];
+            break;
+        case ZSSBarButtonItemTypeRemoveFormat:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.removeFormating();"];
+            break;
+        case ZSSBarButtonItemTypeJustifyLeft:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyLeft();"];
+            break;
+        case ZSSBarButtonItemTypeJustifyCenter:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyCenter();"];
+            break;
+        case ZSSBarButtonItemTypeJustifyRight:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyRight();"];
+            break;
+        case ZSSBarButtonItemTypeJustifyFull:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyFull();"];
+            break;
+        case ZSSBarButtonItemTypeH1:
+        case ZSSBarButtonItemTypeH2:
+        case ZSSBarButtonItemTypeH3:
+        case ZSSBarButtonItemTypeH4:
+        case ZSSBarButtonItemTypeH5:
+        case ZSSBarButtonItemTypeH6:
+            [self setHeading:sender.label];
+            break;
+        case ZSSBarButtonItemTypeTextColor:
+            [self textColor];
+            break;
+        case ZSSBarButtonItemTypeUnorderedList:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setUnorderedList();"];
+            break;
+        case ZSSBarButtonItemTypeOrderedList:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setOrderedList();"];
+            break;
+        case ZSSBarButtonItemTypeHorizontalRule:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setHorizontalRule();"];
+            break;
+        case ZSSBarButtonItemTypeIndent:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setIndent();"];
+            break;
+        case ZSSBarButtonItemTypeOutdent:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setOutdent();"];
+            break;
+        case ZSSBarButtonItemTypeInsertLink: {
+            // Save the selection location
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.prepareInsert();"];
+            // Show the dialog for inserting or editing a link
+            [self showInsertLinkDialogWithLink:self.selectedLinkURL title:self.selectedLinkTitle];
+        }
+            break;
+        case ZSSBarButtonItemTypeRemoveLink:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.unlink();"];
+            break;
+        case ZSSBarButtonItemTypeQuickLink:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.quickLink();"];
+            break;
+        case ZSSBarButtonItemTypeUndo:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.undo();"];
+            break;
+        case ZSSBarButtonItemTypeRedo:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.redo();"];
+            break;
+        case ZSSBarButtonItemTypeParagraph:
+            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setParagraph();"];
+            break;
+        default:
+            if ([self.delegate respondsToSelector:@selector(richTextEditor:didReceiveUnrecognizedActionLabel:)]) {
+                [self.delegate richTextEditor:self didReceiveUnrecognizedActionLabel:sender.label];
+            }
+    }
+}
+
 #pragma mark - Asset Picker
 
 - (void)showInsertURLAlternatePicker {
@@ -1225,15 +834,6 @@ static Class hackishFixClass = Nil;
     NSString *result = [string stringByReplacingOccurrencesOfString:@"+" withString:@" "];
     result = [result stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     return result;
-}
-
-- (void)enableToolbarItems:(BOOL)enable {
-    NSArray *items = self.toolbar.items;
-    for (ZSSBarButtonItem *item in items) {
-        if (![item.label isEqualToString:@"source"]) {
-            item.enabled = enable;
-        }
-    }
 }
 
 @end

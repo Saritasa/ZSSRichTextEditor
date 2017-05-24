@@ -11,150 +11,155 @@
 @interface ZSSBarButtonItem ()
 
 @property (nonatomic) NSString *label;
+@property (nonatomic) ZSSBarButtonItemType itemType;
 
 @end
 
 @implementation ZSSBarButtonItem
 
-+ (ZSSBarButtonItem *)barButtonItemForDefaultItem:(ZSSBarButtonDefaultItem)defaultItem
++ (ZSSBarButtonItem *)barButtonItemForItemType:(ZSSBarButtonItemType)itemType
 {
-    UIImage *image = [self imageForDefaultItem:defaultItem];
-    return [self barButtonItemWithImage:image label:[self labelForDefaultItem:defaultItem]];
+    UIImage *image = [self imageForItemType:itemType];
+    ZSSBarButtonItem *item = [[ZSSBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:nil action:nil];
+    item.label = [self labelForItemType:itemType];
+    item.itemType = itemType;
+    return item;
 }
 
 + (ZSSBarButtonItem *)barButtonItemWithImage:(UIImage *)image label:(NSString *)label
 {
     ZSSBarButtonItem *item = [[ZSSBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:nil action:nil];
     item.label = label;
+    item.itemType = ZSSBarButtonItemTypeCustom;
     return item;
 }
 
-+ (UIImage *)imageForDefaultItem:(ZSSBarButtonDefaultItem)defaultItem
++ (UIImage *)imageForItemType:(ZSSBarButtonItemType)defaultItem
 {
     NSBundle* bundle = [NSBundle bundleForClass:[ZSSBarButtonItem class]];
     switch (defaultItem) {
-        case ZSSBarButtonDefaultItemBold:
+        case ZSSBarButtonItemTypeBold:
             return [UIImage imageNamed:@"ZSSbold.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemItalic:
+        case ZSSBarButtonItemTypeItalic:
             return [UIImage imageNamed:@"ZSSitalic.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemSubscript:
+        case ZSSBarButtonItemTypeSubscript:
             return [UIImage imageNamed:@"ZSSsubscript.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemSuperscript:
+        case ZSSBarButtonItemTypeSuperscript:
             return [UIImage imageNamed:@"ZSSsuperscript.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemStrikeThrough:
+        case ZSSBarButtonItemTypeStrikeThrough:
             return [UIImage imageNamed:@"ZSSstrikethrough.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemUnderline:
+        case ZSSBarButtonItemTypeUnderline:
             return [UIImage imageNamed:@"ZSSunderline.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemRemoveFormat:
+        case ZSSBarButtonItemTypeRemoveFormat:
             return [UIImage imageNamed:@"ZSSclearstyle.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemJustifyLeft:
+        case ZSSBarButtonItemTypeJustifyLeft:
             return [UIImage imageNamed:@"ZSSleftjustify.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemJustifyCenter:
+        case ZSSBarButtonItemTypeJustifyCenter:
             return [UIImage imageNamed:@"ZSScenterjustify.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemJustifyRight:
+        case ZSSBarButtonItemTypeJustifyRight:
             return [UIImage imageNamed:@"ZSSrightjustify.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemJustifyFull:
+        case ZSSBarButtonItemTypeJustifyFull:
             return [UIImage imageNamed:@"ZSSforcejustify.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemH1:
+        case ZSSBarButtonItemTypeH1:
             return [UIImage imageNamed:@"ZSSh1.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemH2:
+        case ZSSBarButtonItemTypeH2:
             return [UIImage imageNamed:@"ZSSh2.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemH3:
+        case ZSSBarButtonItemTypeH3:
             return [UIImage imageNamed:@"ZSSh3.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemH4:
+        case ZSSBarButtonItemTypeH4:
             return [UIImage imageNamed:@"ZSSh4.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemH5:
+        case ZSSBarButtonItemTypeH5:
             return [UIImage imageNamed:@"ZSSh5.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemH6:
+        case ZSSBarButtonItemTypeH6:
             return [UIImage imageNamed:@"ZSSh6.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemTextColor:
+        case ZSSBarButtonItemTypeTextColor:
             return [UIImage imageNamed:@"ZSStextcolor.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemUnorderedList:
+        case ZSSBarButtonItemTypeUnorderedList:
             return [UIImage imageNamed:@"ZSSunorderedlist.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemOrderedList:
+        case ZSSBarButtonItemTypeOrderedList:
             return [UIImage imageNamed:@"ZSSorderedlist.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemHorizontalRule:
+        case ZSSBarButtonItemTypeHorizontalRule:
             return [UIImage imageNamed:@"ZSShorizontalrule.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemIndent:
+        case ZSSBarButtonItemTypeIndent:
             return [UIImage imageNamed:@"ZSSindent.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemOutdent:
+        case ZSSBarButtonItemTypeOutdent:
             return [UIImage imageNamed:@"ZSSoutdent.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemInsertLink:
+        case ZSSBarButtonItemTypeInsertLink:
             return [UIImage imageNamed:@"ZSSlink.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemRemoveLink:
+        case ZSSBarButtonItemTypeRemoveLink:
             return [UIImage imageNamed:@"ZSSunlink.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemQuickLink:
+        case ZSSBarButtonItemTypeQuickLink:
             return [UIImage imageNamed:@"ZSSquicklink.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemUndo:
+        case ZSSBarButtonItemTypeUndo:
             return [UIImage imageNamed:@"ZSSundo.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemRedo:
+        case ZSSBarButtonItemTypeRedo:
             return [UIImage imageNamed:@"ZSSredo.png" inBundle:bundle compatibleWithTraitCollection:nil];
-        case ZSSBarButtonDefaultItemParagraph:
+        case ZSSBarButtonItemTypeParagraph:
             return [UIImage imageNamed:@"ZSSparagraph.png" inBundle:bundle compatibleWithTraitCollection:nil];
         default:
             return nil;
     }
 }
 
-+ (NSString *)labelForDefaultItem:(ZSSBarButtonDefaultItem)defaultItem {
++ (NSString *)labelForItemType:(ZSSBarButtonItemType)defaultItem {
     switch (defaultItem) {
-        case ZSSBarButtonDefaultItemBold:
+        case ZSSBarButtonItemTypeBold:
             return @"bold";
-        case ZSSBarButtonDefaultItemItalic:
+        case ZSSBarButtonItemTypeItalic:
             return @"italic";
-        case ZSSBarButtonDefaultItemSubscript:
+        case ZSSBarButtonItemTypeSubscript:
             return @"subscript";
-        case ZSSBarButtonDefaultItemSuperscript:
+        case ZSSBarButtonItemTypeSuperscript:
             return @"superscript";
-        case ZSSBarButtonDefaultItemStrikeThrough:
+        case ZSSBarButtonItemTypeStrikeThrough:
             return @"strikeThrough";
-        case ZSSBarButtonDefaultItemUnderline:
+        case ZSSBarButtonItemTypeUnderline:
             return @"underline";
-        case ZSSBarButtonDefaultItemRemoveFormat:
+        case ZSSBarButtonItemTypeRemoveFormat:
             return @"removeFormat";
-        case ZSSBarButtonDefaultItemJustifyLeft:
+        case ZSSBarButtonItemTypeJustifyLeft:
             return @"justifyLeft";
-        case ZSSBarButtonDefaultItemJustifyCenter:
+        case ZSSBarButtonItemTypeJustifyCenter:
             return @"justifyCenter";
-        case ZSSBarButtonDefaultItemJustifyRight:
+        case ZSSBarButtonItemTypeJustifyRight:
             return @"justifyRight";
-        case ZSSBarButtonDefaultItemJustifyFull:
+        case ZSSBarButtonItemTypeJustifyFull:
             return @"justifyFull";
-        case ZSSBarButtonDefaultItemH1:
+        case ZSSBarButtonItemTypeH1:
             return @"h1";
-        case ZSSBarButtonDefaultItemH2:
+        case ZSSBarButtonItemTypeH2:
             return @"h2";
-        case ZSSBarButtonDefaultItemH3:
+        case ZSSBarButtonItemTypeH3:
             return @"h3";
-        case ZSSBarButtonDefaultItemH4:
+        case ZSSBarButtonItemTypeH4:
             return @"h4";
-        case ZSSBarButtonDefaultItemH5:
+        case ZSSBarButtonItemTypeH5:
             return @"h5";
-        case ZSSBarButtonDefaultItemH6:
+        case ZSSBarButtonItemTypeH6:
             return @"h6";
-        case ZSSBarButtonDefaultItemTextColor:
+        case ZSSBarButtonItemTypeTextColor:
             return @"textColor";
-        case ZSSBarButtonDefaultItemUnorderedList:
+        case ZSSBarButtonItemTypeUnorderedList:
             return @"unorderedList";
-        case ZSSBarButtonDefaultItemOrderedList:
+        case ZSSBarButtonItemTypeOrderedList:
             return @"orderedList";
-        case ZSSBarButtonDefaultItemHorizontalRule:
+        case ZSSBarButtonItemTypeHorizontalRule:
             return @"horizontalRule";
-        case ZSSBarButtonDefaultItemIndent:
+        case ZSSBarButtonItemTypeIndent:
             return @"indent";
-        case ZSSBarButtonDefaultItemOutdent:
+        case ZSSBarButtonItemTypeOutdent:
             return @"outdent";
-        case ZSSBarButtonDefaultItemInsertLink:
+        case ZSSBarButtonItemTypeInsertLink:
             return @"link";
-        case ZSSBarButtonDefaultItemRemoveLink:
+        case ZSSBarButtonItemTypeRemoveLink:
             return @"removeLink";
-        case ZSSBarButtonDefaultItemQuickLink:
+        case ZSSBarButtonItemTypeQuickLink:
             return @"quickLink";
-        case ZSSBarButtonDefaultItemUndo:
+        case ZSSBarButtonItemTypeUndo:
             return @"undo";
-        case ZSSBarButtonDefaultItemRedo:
+        case ZSSBarButtonItemTypeRedo:
             return @"redo";
-        case ZSSBarButtonDefaultItemParagraph:
+        case ZSSBarButtonItemTypeParagraph:
             return @"p";
         default:
             return nil;

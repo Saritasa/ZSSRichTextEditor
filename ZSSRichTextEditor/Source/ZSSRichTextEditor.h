@@ -24,6 +24,8 @@
 
 - (void)richTextEditor:(ZSSRichTextEditor *)editor didRecognizeMention:(NSString *)mention;
 
+- (void)richTextEditor:(ZSSRichTextEditor *)editor didReceiveUnrecognizedActionLabel:(NSString *)label;
+
 @end
 
 /**
@@ -134,5 +136,11 @@
  *  Set custom css
  */
 - (void)setCSS:(NSString *)css;
+
+/**
+ Handles action for provided bar button item. You can handle urecognized action labels using
+ `richTextEditor:didReceiveUnrecognizedActionLabel:` delegate method.
+ */
+- (void)barButtonItemAction:(ZSSBarButtonItem *)sender;
 
 @end
