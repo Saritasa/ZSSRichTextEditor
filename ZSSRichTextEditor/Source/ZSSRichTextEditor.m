@@ -86,16 +86,6 @@ static Class hackishFixClass = Nil;
 @interface ZSSRichTextEditor () <UIWebViewDelegate, HRColorPickerViewControllerDelegate>
 
 /*
- *  Scroll view containing the toolbar
- */
-@property (nonatomic, strong) UIScrollView *toolBarScroll;
-
-/*
- *  Toolbar containing ZSSBarButtonItems
- */
-@property (nonatomic, strong) UIToolbar *toolbar;
-
-/*
  *  String for the HTML
  */
 @property (nonatomic, strong) NSString *htmlString;
@@ -276,20 +266,14 @@ static Class hackishFixClass = Nil;
 
 #pragma mark - Toolbar Section
 
-- (void)setEnabledToolbarItems:(NSArray *)enabledToolbarItems {
-    
-    _enabledToolbarItems = enabledToolbarItems;
-    [self buildToolbar];
-}
-
 - (void)setToolbarItemTintColor:(UIColor *)toolbarItemTintColor {
     
     _toolbarItemTintColor = toolbarItemTintColor;
     
     // Update the color
-    for (ZSSBarButtonItem *item in self.toolbar.items) {
-        item.tintColor = [self barButtonItemDefaultColor];
-    }
+//    for (ZSSBarButtonItem *item in self.toolbar.items) {
+//        item.tintColor = [self barButtonItemDefaultColor];
+//    }
     self.keyboardItem.tintColor = toolbarItemTintColor;
 }
 
@@ -298,45 +282,34 @@ static Class hackishFixClass = Nil;
     _toolbarItemSelectedTintColor = toolbarItemSelectedTintColor;
 }
 
-- (NSArray *)itemsForToolbar {
-
-    //Define correct bundle for loading resources
-    NSBundle* bundle = [NSBundle bundleForClass:[ZSSRichTextEditor class]];
-    
-    NSMutableArray *items = [[NSMutableArray alloc] init];
-
-    return [NSArray arrayWithArray:items];
-}
-
-
 - (void)buildToolbar {
 
     // Check to see if we have any toolbar items, if not, add them all
-    NSArray *items = [self itemsForToolbar];
-
-    if (self.customZSSBarButtonItems != nil) {
-        items = [items arrayByAddingObjectsFromArray:self.customZSSBarButtonItems];
-    }
-    
-    // get the width before we add custom buttons
-    CGFloat toolbarWidth = items.count == 0 ? 0.0f : (CGFloat)(items.count * 39) - 10;
-    
-    if(self.customBarButtonItems != nil)
-    {
-        items = [items arrayByAddingObjectsFromArray:self.customBarButtonItems];
-        for(ZSSBarButtonItem *buttonItem in self.customBarButtonItems)
-        {
-            toolbarWidth += buttonItem.customView.frame.size.width + 11.0f;
-        }
-    }
-    
-    self.toolbar.items = items;
-    for (ZSSBarButtonItem *item in items) {
-        item.tintColor = [self barButtonItemDefaultColor];
-    }
-    
-    self.toolbar.frame = CGRectMake(0, 0, toolbarWidth, 44);
-    self.toolBarScroll.contentSize = CGSizeMake(self.toolbar.frame.size.width, 44);
+//    NSArray *items = [self itemsForToolbar];
+//
+//    if (self.customZSSBarButtonItems != nil) {
+//        items = [items arrayByAddingObjectsFromArray:self.customZSSBarButtonItems];
+//    }
+//    
+//    // get the width before we add custom buttons
+//    CGFloat toolbarWidth = items.count == 0 ? 0.0f : (CGFloat)(items.count * 39) - 10;
+//    
+//    if(self.customBarButtonItems != nil)
+//    {
+//        items = [items arrayByAddingObjectsFromArray:self.customBarButtonItems];
+//        for(ZSSBarButtonItem *buttonItem in self.customBarButtonItems)
+//        {
+//            toolbarWidth += buttonItem.customView.frame.size.width + 11.0f;
+//        }
+//    }
+//    
+//    self.toolbar.items = items;
+//    for (ZSSBarButtonItem *item in items) {
+//        item.tintColor = [self barButtonItemDefaultColor];
+//    }
+//    
+//    self.toolbar.frame = CGRectMake(0, 0, toolbarWidth, 44);
+//    self.toolBarScroll.contentSize = CGSizeMake(self.toolbar.frame.size.width, 44);
 }
 
 
@@ -544,14 +517,14 @@ static Class hackishFixClass = Nil;
     itemNames = [NSArray arrayWithArray:itemsModified];
     
     // Highlight items
-    NSArray *items = self.toolbar.items;
-    for (ZSSBarButtonItem *item in items) {
-        if ([itemNames containsObject:item.label]) {
-            item.tintColor = [self barButtonItemSelectedDefaultColor];
-        } else {
-            item.tintColor = [self barButtonItemDefaultColor];
-        }
-    }
+//    NSArray *items = self.toolbar.items;
+//    for (ZSSBarButtonItem *item in items) {
+//        if ([itemNames containsObject:item.label]) {
+//            item.tintColor = [self barButtonItemSelectedDefaultColor];
+//        } else {
+//            item.tintColor = [self barButtonItemDefaultColor];
+//        }
+//    }
 }
 
 #pragma mark - UIWebView Delegate
