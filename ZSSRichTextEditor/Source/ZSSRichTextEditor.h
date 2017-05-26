@@ -10,33 +10,34 @@
 #import "HRColorPickerViewController.h"
 
 @class ZSSRichTextEditor;
+@class ZSSToolbarView;
 @class ZSSBarButtonItem;
 
 @protocol ZSSRichTextEditorDelegate <NSObject>
 
 @optional
 
-- (void)richTextEditor:(ZSSRichTextEditor *)editor didChangeText:(NSString *)text html:(NSString *)html;
+- (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didChangeText:(nullable NSString *)text html:(nullable NSString *)html;
 
-- (void)richTextEditor:(ZSSRichTextEditor *)editor didScrollToPosition:(NSInteger)position;
+- (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didScrollToPosition:(NSInteger)position;
 
-- (void)richTextEditor:(ZSSRichTextEditor *)editor didRecognizeHashtag:(NSString *)hashtag;
+- (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didRecognizeHashtag:(nullable NSString *)hashtag;
 
-- (void)richTextEditor:(ZSSRichTextEditor *)editor didRecognizeMention:(NSString *)mention;
+- (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didRecognizeMention:(nullable NSString *)mention;
 
-- (void)richTextEditor:(ZSSRichTextEditor *)editor didReceiveUnrecognizedActionLabel:(NSString *)label;
+- (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didReceiveUnrecognizedActionLabel:(nullable NSString *)label;
 
 @end
 
 /**
  *  The viewController used with ZSSRichTextEditor
  */
-@interface ZSSRichTextEditor : UIView 
+@interface ZSSRichTextEditor : UIView
 
 /**
  *  The base URL to use for the webView
  */
-@property (nonatomic, strong) NSURL *baseURL;
+@property (nonatomic, strong, nullable) NSURL *baseURL;
 
 /**
  *  If the HTML should be formatted to be pretty
@@ -51,32 +52,27 @@
 /**
  *  The placeholder text to use if there is no editor content
  */
-@property (nonatomic, strong) NSString *placeholder;
-
-/**
- *  Toolbar items to include
- */
-@property (nonatomic, strong) NSArray *enabledToolbarItems;
+@property (nonatomic, strong, nullable) NSString *placeholder;
 
 /**
  *  Color to tint the toolbar items
  */
-@property (nonatomic, strong) UIColor *toolbarItemTintColor;
+@property (nonatomic, strong, nonnull) UIColor *toolbarItemTintColor;
 
 /**
  *  Color to tint selected items
  */
-@property (nonatomic, strong) UIColor *toolbarItemSelectedTintColor;
+@property (nonatomic, strong, nonnull) UIColor *toolbarItemSelectedTintColor;
 
 /**
  Parent view controller to present additional controllers.
  */
-@property (nonatomic, weak) UIViewController *viewController;
+@property (nonatomic, weak, nullable) UIViewController *viewController;
 
 /**
  A delegate of the text editor.
  */
-@property (nonatomic, weak) id<ZSSRichTextEditorDelegate> delegate;
+@property (nonatomic, weak, nullable) id<ZSSRichTextEditorDelegate> delegate;
 
 /**
  *  Sets the HTML for the entire editor
@@ -84,19 +80,19 @@
  *  @param html  HTML string to set for the editor
  *
  */
-- (void)setHTML:(NSString *)html;
+- (void)setHTML:(nullable NSString *)html;
 
 /**
  *  Returns the HTML from the Rich Text Editor
  *
  */
-- (NSString *)getHTML;
+- (nullable NSString *)getHTML;
 
 /**
  *  Returns the plain text from the Rich Text Editor
  *
  */
-- (NSString *)getText;
+- (nullable NSString *)getText;
 
 /**
  *  Inserts HTML at the caret position
@@ -104,7 +100,7 @@
  *  @param html  HTML string to insert
  *
  */
-- (void)insertHTML:(NSString *)html;
+- (void)insertHTML:(nullable NSString *)html;
 
 /**
  *  Manually focuses on the text editor
@@ -122,7 +118,7 @@
  *  @param url   The URL for the link
  *  @param title The tile for the link
  */
-- (void)showInsertLinkDialogWithLink:(NSString *)url title:(NSString *)title;
+- (void)showInsertLinkDialogWithLink:(nullable NSString *)url title:(nullable NSString *)title;
 
 /**
  *  Inserts a link
@@ -130,17 +126,16 @@
  *  @param url The URL for the link
  *  @param title The title for the link
  */
-- (void)insertLink:(NSString *)url title:(NSString *)title;
+- (void)insertLink:(nullable NSString *)url title:(nullable NSString *)title;
 
 /**
  *  Set custom css
  */
-- (void)setCSS:(NSString *)css;
+- (void)setCSS:(nullable NSString *)css;
 
 /**
- Handles action for provided bar button item. You can handle urecognized action labels using
- `richTextEditor:didReceiveUnrecognizedActionLabel:` delegate method.
+ Sets new toolbar items for a toolbar view.
  */
-- (void)barButtonItemAction:(ZSSBarButtonItem *)sender;
+- (void)setToolbarItems:(nonnull NSArray<ZSSBarButtonItem *> *)items animated:(BOOL)animated;
 
 @end

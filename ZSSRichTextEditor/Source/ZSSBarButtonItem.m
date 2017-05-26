@@ -17,7 +17,7 @@
 
 @implementation ZSSBarButtonItem
 
-+ (ZSSBarButtonItem *)barButtonItemForItemType:(ZSSBarButtonItemType)itemType
++ (nonnull ZSSBarButtonItem *)barButtonItemForItemType:(ZSSBarButtonItemType)itemType;
 {
     UIImage *image = [self imageForItemType:itemType];
     ZSSBarButtonItem *item = [[ZSSBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -26,7 +26,7 @@
     return item;
 }
 
-+ (ZSSBarButtonItem *)barButtonItemWithImage:(UIImage *)image label:(NSString *)label
++ (nonnull ZSSBarButtonItem *)barButtonItemWithImage:(nonnull UIImage *)image label:(nonnull NSString *)label
 {
     ZSSBarButtonItem *item = [[ZSSBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:nil action:nil];
     item.label = label;

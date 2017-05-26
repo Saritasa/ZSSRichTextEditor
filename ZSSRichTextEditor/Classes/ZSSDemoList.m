@@ -7,6 +7,7 @@
 //
 
 #import "ZSSDemoList.h"
+#import "ZSSDefaultViewController.h"
 
 @interface ZSSDemoList ()
 @property (nonatomic) BOOL isIPad;
@@ -80,6 +81,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == 0) {
+        ZSSDefaultViewController *controller = [[ZSSDefaultViewController alloc] init];
+        [self.navigationController pushViewController:controller animated:YES];
     } else if (indexPath.row == 1) {
     } else if (indexPath.row == 2) {
     } else if (indexPath.row == 3) {

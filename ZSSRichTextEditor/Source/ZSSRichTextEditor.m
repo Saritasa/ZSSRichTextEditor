@@ -9,81 +9,16 @@
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 #import "ZSSRichTextEditor.h"
+#import "ZSSToolbarView.h"
 #import "ZSSBarButtonItem.h"
 #import "HRColorUtil.h"
+#import "CJWWebView+HackishAccessoryHiding.h"
 
 @import JavaScriptCore;
 
-
-/**
- 
- UIWebView modifications for hiding the inputAccessoryView
- 
- **/
-@interface UIWebView (HackishAccessoryHiding)
-@property (nonatomic, assign) BOOL hidesInputAccessoryView;
-@end
-
-@implementation UIWebView (HackishAccessoryHiding)
-
-static const char * const hackishFixClassName = "UIWebBrowserViewMinusAccessoryView";
-static Class hackishFixClass = Nil;
-
-- (UIView *)hackishlyFoundBrowserView {
-    UIScrollView *scrollView = self.scrollView;
-    
-    UIView *browserView = nil;
-    for (UIView *subview in scrollView.subviews) {
-        if ([NSStringFromClass([subview class]) hasPrefix:@"UIWebBrowserView"]) {
-            browserView = subview;
-            break;
-        }
-    }
-    return browserView;
-}
-
-- (id)methodReturningNil {
-    return nil;
-}
-
-- (void)ensureHackishSubclassExistsOfBrowserViewClass:(Class)browserViewClass {
-    if (!hackishFixClass) {
-        Class newClass = objc_allocateClassPair(browserViewClass, hackishFixClassName, 0);
-        newClass = objc_allocateClassPair(browserViewClass, hackishFixClassName, 0);
-        IMP nilImp = [self methodForSelector:@selector(methodReturningNil)];
-        class_addMethod(newClass, @selector(inputAccessoryView), nilImp, "@@:");
-        objc_registerClassPair(newClass);
-        
-        hackishFixClass = newClass;
-    }
-}
-
-- (BOOL) hidesInputAccessoryView {
-    UIView *browserView = [self hackishlyFoundBrowserView];
-    return [browserView class] == hackishFixClass;
-}
-
-- (void) setHidesInputAccessoryView:(BOOL)value {
-    UIView *browserView = [self hackishlyFoundBrowserView];
-    if (browserView == nil) {
-        return;
-    }
-    [self ensureHackishSubclassExistsOfBrowserViewClass:[browserView class]];
-    
-    if (value) {
-        object_setClass(browserView, hackishFixClass);
-    }
-    else {
-        Class normalClass = objc_getClass("UIWebBrowserView");
-        object_setClass(browserView, normalClass);
-    }
-    [browserView reloadInputViews];
-}
-
-@end
-
-
 @interface ZSSRichTextEditor () <UIWebViewDelegate, HRColorPickerViewControllerDelegate>
+
+@property (nonatomic) ZSSToolbarView *toolbarView;
 
 /*
  *  String for the HTML
@@ -106,21 +41,6 @@ static Class hackishFixClass = Nil;
 @property (nonatomic, strong) NSString *selectedLinkTitle;
 
 /*
- *  Bar button item for the keyboard dismiss button in the toolbar
- */
-@property (nonatomic, strong) UIBarButtonItem *keyboardItem;
-
-/*
- *  Array for custom bar button items
- */
-@property (nonatomic, strong) NSMutableArray *customBarButtonItems;
-
-/*
- *  Array for custom ZSSBarButtonItems
- */
-@property (nonatomic, strong) NSMutableArray *customZSSBarButtonItems;
-
-/*
  *  NSString holding the html
  */
 @property (nonatomic, strong) NSString *internalHTML;
@@ -135,13 +55,10 @@ static Class hackishFixClass = Nil;
  */
 @property (nonatomic) BOOL editorLoaded;
 
+@property (nonatomic) NSArray *highlightedBarButtonLabels;
+
 @end
 
-/*
- 
- ZSSRichTextEditor
- 
- */
 @implementation ZSSRichTextEditor
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -164,74 +81,26 @@ static Class hackishFixClass = Nil;
     self.receiveEditorDidChangeEvents = YES;
     self.formatHTML = YES;
 
-    //Initalise enabled toolbar items array
-    self.enabledToolbarItems = [[NSArray alloc] init];
-
-    //Frame for the source view and editor view
-    CGRect frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    self.toolbarView = [[ZSSToolbarView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 44.0)];
 
     //Editor View
-    self.editorView = [[UIWebView alloc] initWithFrame:frame];
+    self.editorView = [[UIWebView alloc] initWithFrame:CGRectZero];
     self.editorView.delegate = self;
-    self.editorView.hidesInputAccessoryView = YES;
+    self.editorView.cjw_inputAccessoryView = self.toolbarView;
     self.editorView.keyboardDisplayRequiresUserAction = NO;
     self.editorView.scalesPageToFit = YES;
-    self.editorView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     self.editorView.dataDetectorTypes = UIDataDetectorTypeNone;
-    self.editorView.scrollView.bounces = NO;
     self.editorView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.editorView];
 
-//    //Scrolling View
-//    self.toolBarScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, [self isIpad] ? self.frame.size.width : self.frame.size.width - 44, 44)];
-//    self.toolBarScroll.backgroundColor = [UIColor clearColor];
-//    self.toolBarScroll.showsHorizontalScrollIndicator = NO;
-//
-//    //Toolbar with icons
-//    self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-//    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//    self.toolbar.backgroundColor = [UIColor clearColor];
-//    [self.toolBarScroll addSubview:self.toolbar];
-//    self.toolBarScroll.autoresizingMask = self.toolbar.autoresizingMask;
-//
-    //Parent holding view
-//    self.toolbarHolder = [[UIView alloc] init];
-//    self.toolbarHolder.autoresizingMask = self.toolbar.autoresizingMask;
-//    [self.toolbarHolder addSubview:self.toolBarScroll];
-//    UIToolbar *backgroundToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44)];
-//    backgroundToolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//    [self.toolbarHolder insertSubview:backgroundToolbar atIndex:0];
-//
-//    //Hide Keyboard
-//    if (![self isIpad]) {
-//
-//        // Toolbar holder used to crop and position toolbar
-//        UIView *toolbarCropper = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width-44, 0, 44, 44)];
-//        toolbarCropper.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//        toolbarCropper.clipsToBounds = YES;
-//
-//        // Use a toolbar so that we can tint
-//        UIToolbar *keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(-7, -1, 44, 44)];
-//        [toolbarCropper addSubview:keyboardToolbar];
-//
-//        self.keyboardItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSkeyboard.png"] style:UIBarButtonItemStylePlain target:self action:@selector(dismissKeyboard)];
-//        keyboardToolbar.items = @[self.keyboardItem];
-//        [self.toolbarHolder addSubview:toolbarCropper];
-//
-//        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0.6f, 44)];
-//        line.backgroundColor = [UIColor lightGrayColor];
-//        line.alpha = 0.7f;
-//        [toolbarCropper addSubview:line];
-//
-//    }
-//
-//    [self addSubview:self.toolbarHolder];
-
-    //Build the toolbar
-    [self buildToolbar];
-
     //Load Resources
     [self loadResources];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.editorView.frame = self.bounds;
 }
 
 #pragma mark - Resources Section
@@ -266,52 +135,17 @@ static Class hackishFixClass = Nil;
 
 #pragma mark - Toolbar Section
 
-- (void)setToolbarItemTintColor:(UIColor *)toolbarItemTintColor {
-    
+- (void)setToolbarItemTintColor:(UIColor *)toolbarItemTintColor
+{
     _toolbarItemTintColor = toolbarItemTintColor;
-    
-    // Update the color
-//    for (ZSSBarButtonItem *item in self.toolbar.items) {
-//        item.tintColor = [self barButtonItemDefaultColor];
-//    }
-    self.keyboardItem.tintColor = toolbarItemTintColor;
+    [self updateHighlightForBarButtonItems];
 }
 
-- (void)setToolbarItemSelectedTintColor:(UIColor *)toolbarItemSelectedTintColor {
-    
+- (void)setToolbarItemSelectedTintColor:(UIColor *)toolbarItemSelectedTintColor
+{
     _toolbarItemSelectedTintColor = toolbarItemSelectedTintColor;
+    [self updateHighlightForBarButtonItems];
 }
-
-- (void)buildToolbar {
-
-    // Check to see if we have any toolbar items, if not, add them all
-//    NSArray *items = [self itemsForToolbar];
-//
-//    if (self.customZSSBarButtonItems != nil) {
-//        items = [items arrayByAddingObjectsFromArray:self.customZSSBarButtonItems];
-//    }
-//    
-//    // get the width before we add custom buttons
-//    CGFloat toolbarWidth = items.count == 0 ? 0.0f : (CGFloat)(items.count * 39) - 10;
-//    
-//    if(self.customBarButtonItems != nil)
-//    {
-//        items = [items arrayByAddingObjectsFromArray:self.customBarButtonItems];
-//        for(ZSSBarButtonItem *buttonItem in self.customBarButtonItems)
-//        {
-//            toolbarWidth += buttonItem.customView.frame.size.width + 11.0f;
-//        }
-//    }
-//    
-//    self.toolbar.items = items;
-//    for (ZSSBarButtonItem *item in items) {
-//        item.tintColor = [self barButtonItemDefaultColor];
-//    }
-//    
-//    self.toolbar.frame = CGRectMake(0, 0, toolbarWidth, 44);
-//    self.toolBarScroll.contentSize = CGSizeMake(self.toolbar.frame.size.width, 44);
-}
-
 
 #pragma mark - Editor Modification Section
 
@@ -322,7 +156,6 @@ static Class hackishFixClass = Nil;
     if (self.editorLoaded) {
         [self updateCSS];
     }
-    
 }
 
 - (void)updateCSS {
@@ -514,17 +347,9 @@ static Class hackishFixClass = Nil;
         }
         [itemsModified addObject:updatedItem];
     }
-    itemNames = [NSArray arrayWithArray:itemsModified];
-    
-    // Highlight items
-//    NSArray *items = self.toolbar.items;
-//    for (ZSSBarButtonItem *item in items) {
-//        if ([itemNames containsObject:item.label]) {
-//            item.tintColor = [self barButtonItemSelectedDefaultColor];
-//        } else {
-//            item.tintColor = [self barButtonItemDefaultColor];
-//        }
-//    }
+
+    self.highlightedBarButtonLabels = [itemsModified copy];
+    [self updateHighlightForBarButtonItems];
 }
 
 #pragma mark - UIWebView Delegate
@@ -560,9 +385,7 @@ static Class hackishFixClass = Nil;
     }
     
     return YES;
-    
 }
-
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     self.editorLoaded = YES;
@@ -598,7 +421,7 @@ static Class hackishFixClass = Nil;
         
     };
     [ctx evaluateScript:@"document.getElementById('zss_editor_content').addEventListener('input', contentUpdateCallback, false);"];
-    
+
 }
 
 #pragma mark - Mention & Hashtag Support Section
@@ -750,6 +573,16 @@ static Class hackishFixClass = Nil;
     }
 }
 
+- (void)setToolbarItems:(nonnull NSArray<ZSSBarButtonItem *> *)items animated:(BOOL)animated
+{
+    [self.toolbarView setItems:items animated:animated];
+    for (ZSSBarButtonItem *item in items) {
+        item.target = self;
+        item.action = @selector(barButtonItemAction:);
+    }
+    [self updateHighlightForBarButtonItems];
+}
+
 #pragma mark - Asset Picker
 
 - (void)showInsertURLAlternatePicker {
@@ -757,6 +590,17 @@ static Class hackishFixClass = Nil;
 }
 
 #pragma mark - Utilities
+
+- (void)updateHighlightForBarButtonItems
+{
+    for (ZSSBarButtonItem *item in self.toolbarView.items) {
+        if ([self.highlightedBarButtonLabels containsObject:item.label]) {
+            item.tintColor = [self barButtonItemSelectedDefaultColor];
+        } else {
+            item.tintColor = [self barButtonItemDefaultColor];
+        }
+    }
+}
 
 - (NSString *)removeQuotesFromHTML:(NSString *)html {
     html = [html stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];

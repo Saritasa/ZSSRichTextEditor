@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, ZSSBarButtonItemType) {
 /**
  A label of the bar button item. Useful for identifying the bar button item and user actions.
  */
-@property (nonatomic, readonly) NSString *label;
+@property (nonatomic, readonly, nullable) NSString *label;
 
 /**
  An item type of the bar button item.
@@ -56,11 +56,11 @@ typedef NS_ENUM(NSInteger, ZSSBarButtonItemType) {
 /**
  Returns new bar button item.
  */
-+ (ZSSBarButtonItem *)barButtonItemForItemType:(ZSSBarButtonItemType)itemType;
++ (nonnull ZSSBarButtonItem *)barButtonItemForItemType:(ZSSBarButtonItemType)itemType;
 
 /**
  Returns custom bar button item with an image and a label.
  */
-+ (ZSSBarButtonItem *)barButtonItemWithImage:(UIImage *)image label:(NSString *)label;
++ (nonnull ZSSBarButtonItem *)barButtonItemWithImage:(nonnull UIImage *)image label:(nonnull NSString *)label;
 
 @end
