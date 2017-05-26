@@ -101,7 +101,7 @@
 		45F860C718A84CFA0011266B /* ZSSunorderedlist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F860A518A84CFA0011266B /* ZSSunorderedlist@2x.png */; };
 		45F860C818A84CFA0011266B /* ZSSviewsource@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F860A618A84CFA0011266B /* ZSSviewsource@2x.png */; };
 		4D1704CA1ED7FA3B00AE106B /* CJWWebView+HackishAccessoryHiding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1704C91ED7FA3B00AE106B /* CJWWebView+HackishAccessoryHiding.m */; };
-		4D1704CD1ED8006800AE106B /* ZSSDefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1704CC1ED8006800AE106B /* ZSSDefaultViewController.m */; };
+		4D1704CD1ED8006800AE106B /* ZSSDemoDefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1704CC1ED8006800AE106B /* ZSSDemoDefaultViewController.m */; };
 		4DCCE4971ED2CEC00046D1A1 /* ZSSToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DCCE4961ED2CEC00046D1A1 /* ZSSToolbarView.m */; };
 		DB703BB11D7B2FEA0013C608 /* jQuery.js in Resources */ = {isa = PBXBuildFile; fileRef = DB703BB01D7B2FEA0013C608 /* jQuery.js */; };
 		DB703BB31D7B31D10013C608 /* JSBeautifier.js in Resources */ = {isa = PBXBuildFile; fileRef = DB703BB21D7B31D10013C608 /* JSBeautifier.js */; };
@@ -219,8 +219,8 @@
 		45F860A618A84CFA0011266B /* ZSSviewsource@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ZSSviewsource@2x.png"; path = "Source/Images/ZSSviewsource@2x.png"; sourceTree = "<group>"; };
 		4D1704C81ED7FA3B00AE106B /* CJWWebView+HackishAccessoryHiding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CJWWebView+HackishAccessoryHiding.h"; path = "Source/CJWWebView+HackishAccessoryHiding.h"; sourceTree = "<group>"; };
 		4D1704C91ED7FA3B00AE106B /* CJWWebView+HackishAccessoryHiding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CJWWebView+HackishAccessoryHiding.m"; path = "Source/CJWWebView+HackishAccessoryHiding.m"; sourceTree = "<group>"; };
-		4D1704CB1ED8006800AE106B /* ZSSDefaultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSDefaultViewController.h; path = Classes/ZSSDefaultViewController.h; sourceTree = "<group>"; };
-		4D1704CC1ED8006800AE106B /* ZSSDefaultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSDefaultViewController.m; path = Classes/ZSSDefaultViewController.m; sourceTree = "<group>"; };
+		4D1704CB1ED8006800AE106B /* ZSSDemoDefaultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSDemoDefaultViewController.h; path = Classes/ZSSDemoDefaultViewController.h; sourceTree = "<group>"; };
+		4D1704CC1ED8006800AE106B /* ZSSDemoDefaultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSDemoDefaultViewController.m; path = Classes/ZSSDemoDefaultViewController.m; sourceTree = "<group>"; };
 		4DCCE4951ED2CEC00046D1A1 /* ZSSToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZSSToolbarView.h; path = Source/ZSSToolbarView.h; sourceTree = "<group>"; };
 		4DCCE4961ED2CEC00046D1A1 /* ZSSToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZSSToolbarView.m; path = Source/ZSSToolbarView.m; sourceTree = "<group>"; };
 		DB703BB01D7B2FEA0013C608 /* jQuery.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jQuery.js; path = Source/jQuery.js; sourceTree = "<group>"; };
@@ -246,8 +246,8 @@
 			children = (
 				2343B1D8199B2C9300349048 /* ZSSDemoList.h */,
 				2343B1D9199B2C9300349048 /* ZSSDemoList.m */,
-				4D1704CB1ED8006800AE106B /* ZSSDefaultViewController.h */,
-				4D1704CC1ED8006800AE106B /* ZSSDefaultViewController.m */,
+				4D1704CB1ED8006800AE106B /* ZSSDemoDefaultViewController.h */,
+				4D1704CC1ED8006800AE106B /* ZSSDemoDefaultViewController.m */,
 			);
 			name = Demo;
 			sourceTree = "<group>";
@@ -612,7 +612,7 @@
 				4DCCE4971ED2CEC00046D1A1 /* ZSSToolbarView.m in Sources */,
 				4581EBBB184B0F5C0048CAB0 /* ZSSRichTextEditor.m in Sources */,
 				45A0CA5118A8522A00F3F35E /* HRColorUtil.m in Sources */,
-				4D1704CD1ED8006800AE106B /* ZSSDefaultViewController.m in Sources */,
+				4D1704CD1ED8006800AE106B /* ZSSDemoDefaultViewController.m in Sources */,
 				45A0CA4E18A8522A00F3F35E /* HRColorCursor.m in Sources */,
 				4513B3D8184E8F5100A9CA86 /* ZSSBarButtonItem.m in Sources */,
 			);

@@ -1,22 +1,22 @@
 //
-//  ZSSDefaultViewController.m
+//  ZSSDemoDefaultViewController.m
 //  ZSSRichTextEditor
 //
 //  Created by Aleksey Kuznetsov on 5/26/17.
 //  Copyright © 2017 Zed Said Studio. All rights reserved.
 //
 
-#import "ZSSDefaultViewController.h"
+#import "ZSSDemoDefaultViewController.h"
 #import "ZSSRichTextEditor.h"
 #import "ZSSBarButtonItem.h"
 
-@interface ZSSDefaultViewController ()
+@interface ZSSDemoDefaultViewController ()
 
 @property (nonatomic) ZSSRichTextEditor *editorView;
 
 @end
 
-@implementation ZSSDefaultViewController
+@implementation ZSSDemoDefaultViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

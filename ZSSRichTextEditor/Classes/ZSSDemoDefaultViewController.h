@@ -1,5 +1,5 @@
 //
-//  ZSSDefaultViewController.h
+//  ZSSDemoDefaultViewController.h
 //  ZSSRichTextEditor
 //
 //  Created by Aleksey Kuznetsov on 5/26/17.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ZSSDefaultViewController : UIViewController
+@interface ZSSDemoDefaultViewController : UIViewController
 
 @end

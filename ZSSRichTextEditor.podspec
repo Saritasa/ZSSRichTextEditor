@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.screenshots  = "https://camo.githubusercontent.com/2bcf02776f39cae560c57793adbd5eaf4fff9223/687474703a2f2f662e636c2e6c792f6974656d732f304c3363304e337531343251325330763159306f2f64656d6f312e676966", "https://camo.githubusercontent.com/3f9c01eba9c69d030a69faaa1a2e01a733244627/687474703a2f2f636c2e6c792f696d6167652f3369343134303367323030422f64656d6f2e676966"
 
   s.license      = "MIT"
-  
+
   s.author       = { "Nic Hubbard" => "nic@zedsaid.com" }
 
   s.platform     = :ios, "7.0"
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.exclude_files = "**/ZSSDemo*.{h,m}", "**/ZSSAppDelegate*.{h,m}", "**/main.m"
   s.resources = "**/ZSS*.png", "**/ZSSRichTextEditor.js", "**/editor.html", "**/jQuery.js", "**/JSBeautifier.js"
 
-  s.frameworks = "CoreGraphics", "CoreText"
+  s.frameworks = "CoreGraphics"
 
   s.requires_arc = true
 end
