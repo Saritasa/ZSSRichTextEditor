@@ -90,6 +90,7 @@
     self.editorView = [[UIWebView alloc] initWithFrame:CGRectZero];
     self.editorView.delegate = self;
     self.editorView.cjw_inputAccessoryView = self.toolbarView;
+    self.editorView.opaque = NO;
     self.editorView.keyboardDisplayRequiresUserAction = NO;
     self.editorView.scalesPageToFit = YES;
     self.editorView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -104,6 +105,17 @@
     [super layoutSubviews];
     self.editorView.frame = self.bounds;
     [self setContentHeight:self.editorView.bounds.size.height];
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    [super setBackgroundColor:backgroundColor];
+    self.editorView.backgroundColor = backgroundColor;
+}
+
+- (UIColor *)backgroundColor
+{
+    return [super backgroundColor];
 }
 
 #pragma mark - Resources Section
