@@ -26,7 +26,9 @@
         [_backgroundToolbar addSubview:_scrollView];
 
         _toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-        _toolbar.backgroundColor = [UIColor clearColor];
+        [_toolbar setBackgroundImage:[ZSSToolbarView transparentPixel]
+                  forToolbarPosition:UIBarPositionBottom
+                          barMetrics:UIBarMetricsDefault];
         [_scrollView addSubview:_toolbar];
     }
     return self;
@@ -53,6 +55,20 @@
 
     self.items = items;
     [self.toolbar setItems:items animated:animated];
+}
+
++ (UIImage *)transparentPixel
+{
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(nil, 1, 1, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast);
+    CGColorSpaceRelease(colorSpace);
+    CGContextSetFillColorWithColor(context, [UIColor clearColor].CGColor);
+    CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
+    CGImageRef cgImage = CGBitmapContextCreateImage(context);
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+    CGContextRelease(context);
+    return image;
 }
 
 @end
