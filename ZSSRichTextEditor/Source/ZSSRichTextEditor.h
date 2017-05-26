@@ -27,6 +27,8 @@
 
 - (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didReceiveUnrecognizedActionLabel:(nullable NSString *)label;
 
+- (BOOL)richTextEditor:(nonnull ZSSRichTextEditor *)editor shouldInteractWithURL:(nullable NSURL *)url;
+
 @end
 
 /**

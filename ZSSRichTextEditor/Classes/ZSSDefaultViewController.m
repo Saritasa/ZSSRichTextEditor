@@ -54,7 +54,7 @@
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    self.editorView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, 300.0);
+    self.editorView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, 200.0);
 }
 
 @end

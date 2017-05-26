@@ -75,15 +75,14 @@
     [self setup];
 }
 
-- (void)setup {
-    //Initialise variables
+- (void)setup
+{
     self.editorLoaded = NO;
     self.receiveEditorDidChangeEvents = YES;
     self.formatHTML = YES;
 
     self.toolbarView = [[ZSSToolbarView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 44.0)];
 
-    //Editor View
     self.editorView = [[UIWebView alloc] initWithFrame:CGRectZero];
     self.editorView.delegate = self;
     self.editorView.cjw_inputAccessoryView = self.toolbarView;
@@ -93,7 +92,6 @@
     self.editorView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.editorView];
 
-    //Load Resources
     [self loadResources];
 }
 
@@ -101,6 +99,7 @@
 {
     [super layoutSubviews];
     self.editorView.frame = self.bounds;
+    [self setContentHeight:self.editorView.bounds.size.height];
 }
 
 #pragma mark - Resources Section
@@ -354,13 +353,16 @@
 
 #pragma mark - UIWebView Delegate
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
     
     
     NSString *urlString = [[request URL] absoluteString];
-    //NSLog(@"web request");
-    //NSLog(@"%@", urlString);
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        BOOL shouldInteract = NO;
+        if ([self.delegate respondsToSelector:@selector(richTextEditor:shouldInteractWithURL:)]) {
+            shouldInteract = [self.delegate richTextEditor:self shouldInteractWithURL:[request URL]];
+        }
         return NO;
     } else if ([urlString rangeOfString:@"callback://0/"].location != NSNotFound) {
         
@@ -402,6 +404,8 @@
     if (self.customCSS) {
         [self updateCSS];
     }
+
+    [self setContentHeight:self.editorView.bounds.size.height];
     
     /*
      
@@ -600,6 +604,13 @@
             item.tintColor = [self barButtonItemDefaultColor];
         }
     }
+}
+
+- (void)setContentHeight:(float)contentHeight {
+    //Call the contentHeight javascript method
+    NSString *js = [NSString stringWithFormat:@"zss_editor.contentHeight = %f;", contentHeight];
+    [self.editorView stringByEvaluatingJavaScriptFromString:js];
+
 }
 
 - (NSString *)removeQuotesFromHTML:(NSString *)html {
