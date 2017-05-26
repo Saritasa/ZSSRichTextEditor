@@ -1,6 +1,8 @@
 ZSSRichTextEditor
 =============
 
+> This is a fork of https://github.com/nnhubbard/ZSSRichTextEditor but some stuff were intentionally thrown away in order to better support our projects.
+
 The Editor
 ---
 
@@ -102,20 +104,20 @@ When the alternate picker icon (crosshair) is tapped it will call the correspond
 
 ```objective-c
 - (void)showInsertURLAlternatePicker {
-    
+
     [self dismissAlertView];
-    
+
     // Show your custom picker
-    
+
 }
 
 
 - (void)showInsertImageAlternatePicker {
-    
+
     [self dismissAlertView];
-    
+
     // Show your custom picker
-    
+
 }
 ```
 
@@ -155,11 +157,11 @@ Then you will receive events in the following method:
 
 ```objective-c
 - (void)editorDidChangeWithText:(NSString *)text andHTML:(NSString *)html {
-    
+
     NSLog(@"Text Has Changed: %@", text);
-    
+
     NSLog(@"HTML Has Changed: %@", html);
-    
+
 }
 ```
 
@@ -169,17 +171,17 @@ Receive Hashtag & Mention Events
 Hashtags:
 ```objective-c
 - (void)hashtagRecognizedWithWord:(NSString *)word {
-    
+
     NSLog(@"Hashtag has been recognized: %@", word);
-    
+
 }
 ```
 Mentions:
 ```objective-c
 - (void)mentionRecognizedWithWord:(NSString *)word {
-    
+
     NSLog(@"Mention has been recognized: %@", word);
-    
+
 }
 ```
 
