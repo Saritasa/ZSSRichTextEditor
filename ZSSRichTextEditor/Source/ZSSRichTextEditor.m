@@ -70,9 +70,13 @@
     return self;
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self setup];
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self setup];
+    }
+    return self;
 }
 
 - (void)setup
