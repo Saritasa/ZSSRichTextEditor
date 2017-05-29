@@ -385,15 +385,6 @@
         NSString *className = [urlString stringByReplacingOccurrencesOfString:@"callback://0/" withString:@""];
         [self updateToolBarWithButtonName:className];
         
-    } else if ([urlString rangeOfString:@"debug://"].location != NSNotFound) {
-        
-        NSLog(@"Debug Found");
-        
-        // We recieved the callback
-        NSString *debug = [urlString stringByReplacingOccurrencesOfString:@"debug://" withString:@""];
-        debug = [debug stringByReplacingPercentEscapesUsingEncoding:NSStringEncodingConversionAllowLossy];
-        NSLog(@"%@", debug);
-        
     } else if ([urlString rangeOfString:@"scroll://"].location != NSNotFound) {
         NSInteger position = [[urlString stringByReplacingOccurrencesOfString:@"scroll://" withString:@""] integerValue];
         if ([self.delegate respondsToSelector:@selector(richTextEditor:didScrollToPosition:)]) {
