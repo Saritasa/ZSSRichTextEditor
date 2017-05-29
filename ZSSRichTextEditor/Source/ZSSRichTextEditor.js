@@ -27,9 +27,6 @@ zss_editor.currentEditingLink;
 // The objects that are enabled
 zss_editor.enabledItems = {};
 
-// Height of content window, will be set by viewController
-zss_editor.contentHeight = 244;
-
 // Sets to true when extra footer gap shows and requires to hide
 zss_editor.updateScrollOffset = false;
 
@@ -45,7 +42,7 @@ zss_editor.init = function() {
                                 $('img').removeClass('zs_active');
                                 }
                                 });
-    
+
     $(document).on('selectionchange',function(e){
                    zss_editor.calculateEditorHeightWithCaretPosition();
                    zss_editor.setScrollPosition();
@@ -80,10 +77,8 @@ zss_editor.updateOffset = function() {
         return;
     
     var offsetY = window.document.body.scrollTop;
-    
-    var footer = $('#zss_editor_footer');
-    
-    var maxOffsetY = footer.offset().top - zss_editor.contentHeight;
+
+    var maxOffsetY = zss_editor.getContentHeight();
     
     if (maxOffsetY < 0)
         maxOffsetY = 0;
@@ -92,8 +87,14 @@ zss_editor.updateOffset = function() {
     {
         window.scrollTo(0, maxOffsetY);
     }
-    
+
     zss_editor.setScrollPosition();
+}
+
+zss_editor.getContentHeight = function() {
+    var body = document.body;
+    var html = document.documentElement;
+    return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
 }
 
 // This will show up in the XCode console as we are able to push this into an NSLog.
@@ -146,24 +147,25 @@ zss_editor.getCaretYPosition = function() {
 }
 
 zss_editor.calculateEditorHeightWithCaretPosition = function() {
-    
-    var padding = 50;
+
     var c = zss_editor.getCaretYPosition();
     
-    var editor = $('#zss_editor_content');
-    
     var offsetY = window.document.body.scrollTop;
-    var height = zss_editor.contentHeight;
+    var height = window.innerHeight;
+    var lineHeight = zss_editor.getLineHeight();
     
     var newPos = window.pageYOffset;
     
     if (c < offsetY) {
-        newPos = c;
-    } else if (c > (offsetY + height - padding)) {
-        newPos = c - height + padding - 18;
+        window.scrollTo(0, c);
+    } else if (c + lineHeight > (offsetY + height)) {
+        window.scrollTo(0, c - height + lineHeight);
     }
-    
-    window.scrollTo(0, newPos);
+}
+
+zss_editor.getLineHeight = function() {
+    var lineHeight = window.getComputedStyle(window.document.body).getPropertyValue('line-height');
+    return parseInt(lineHeight, 10);
 }
 
 zss_editor.backuprange = function(){

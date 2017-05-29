@@ -104,7 +104,6 @@
 {
     [super layoutSubviews];
     self.editorView.frame = self.bounds;
-    [self setContentHeight:self.editorView.bounds.size.height];
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
@@ -421,8 +420,6 @@
         [self updateCSS];
     }
 
-    [self setContentHeight:self.editorView.bounds.size.height];
-    
     /*
      
      Callback for when text is changed, solution posted by richardortiz84 https://github.com/nnhubbard/ZSSRichTextEditor/issues/5
@@ -620,13 +617,6 @@
             item.tintColor = [self barButtonItemDefaultColor];
         }
     }
-}
-
-- (void)setContentHeight:(float)contentHeight {
-    //Call the contentHeight javascript method
-    NSString *js = [NSString stringWithFormat:@"zss_editor.contentHeight = %f;", contentHeight];
-    [self.editorView stringByEvaluatingJavaScriptFromString:js];
-
 }
 
 - (NSString *)removeQuotesFromHTML:(NSString *)html {
