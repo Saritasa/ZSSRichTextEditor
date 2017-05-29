@@ -130,30 +130,39 @@ zss_editor.getCaretYPosition = function() {
     var sel = window.getSelection();
     // Next line is comented to prevent deselecting selection. It looks like work but if there are any issues will appear then uconmment it as well as code above.
     //sel.collapseToStart();
-    var range = sel.getRangeAt(0);
-    var span = document.createElement('span');// something happening here preventing selection of elements
-    range.collapse(false);
-    range.insertNode(span);
-    var topPosition = span.offsetTop;
-    span.parentNode.removeChild(span);
-    return topPosition;
+    if (sel.rangeCount > 0) {
+        var range = sel.getRangeAt(0);
+        var span = document.createElement('span');// something happening here preventing selection of elements
+        range.collapse(false);
+        range.insertNode(span);
+        var topPosition = span.offsetTop;
+        span.parentNode.removeChild(span);
+        return topPosition;
+    } else {
+        return 0;
+    }
 }
 
 zss_editor.calculateEditorHeightWithCaretPosition = function() {
 
     var c = zss_editor.getCaretYPosition();
-    
+
     var offsetY = window.document.body.scrollTop;
-    var height = window.innerHeight;
+    var height = Math.max(window.innerHeight, document.documentElement.clientHeight);
     var lineHeight = zss_editor.getLineHeight();
     
     var newPos = window.pageYOffset;
     
     if (c < offsetY) {
-        window.scrollTo(0, c);
+        newPos = c;
     } else if (c + lineHeight > (offsetY + height)) {
-        window.scrollTo(0, c - height + lineHeight);
+        newPos = c - height + lineHeight;
     }
+
+    console.log("newPos " + newPos);
+    console.log("height " + height);
+    console.log("getContentHeight " + zss_editor.getContentHeight());
+    window.scrollTo(0, newPos);
 }
 
 zss_editor.getLineHeight = function() {

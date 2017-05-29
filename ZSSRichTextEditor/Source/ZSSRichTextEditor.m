@@ -416,16 +416,20 @@
      Callback for when text is changed, solution posted by richardortiz84 https://github.com/nnhubbard/ZSSRichTextEditor/issues/5
      
      */
+    __weak typeof(self) weakSelf = self;
     JSContext *ctx = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     ctx[@"contentUpdateCallback"] = ^(JSValue *msg) {
-        
-        if (_receiveEditorDidChangeEvents) {
-            if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
-                [self.delegate richTextEditor:self didChangeText:[self getText] html:[self getHTML]];
+        if (weakSelf) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf.receiveEditorDidChangeEvents) {
+                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+                    [strongSelf.delegate richTextEditor:strongSelf didChangeText:[strongSelf getText] html:[strongSelf getHTML]];
+                }
             }
+
+            [strongSelf checkForMentionOrHashtagInText:[strongSelf getText]];
         }
-        
-        [self checkForMentionOrHashtagInText:[self getText]];
+
         
     };
     [ctx evaluateScript:@"document.getElementById('zss_editor_content').addEventListener('input', contentUpdateCallback, false);"];
