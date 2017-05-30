@@ -21,11 +21,6 @@
 @property (nonatomic) ZSSToolbarView *toolbarView;
 
 /*
- *  String for the HTML
- */
-@property (nonatomic, strong) NSString *htmlString;
-
-/*
  *  UIWebView for writing/editing/displaying the content
  */
 @property (nonatomic, strong) UIWebView *editorView;
@@ -419,21 +414,29 @@
     __weak typeof(self) weakSelf = self;
     JSContext *ctx = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     ctx[@"contentUpdateCallback"] = ^(JSValue *msg) {
-        if (weakSelf) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf.receiveEditorDidChangeEvents) {
-                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
-                    [strongSelf.delegate richTextEditor:strongSelf didChangeText:[strongSelf getText] html:[strongSelf getHTML]];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if (weakSelf) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                if (strongSelf.receiveEditorDidChangeEvents) {
+                    if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+                        [strongSelf.delegate richTextEditor:strongSelf didChangeText:[strongSelf getText] html:[strongSelf getHTML]];
+                    }
                 }
+                [strongSelf checkForMentionOrHashtagInText:[strongSelf getText]];
             }
-
-            [strongSelf checkForMentionOrHashtagInText:[strongSelf getText]];
-        }
-
-        
+        }];
     };
     [ctx evaluateScript:@"document.getElementById('zss_editor_content').addEventListener('input', contentUpdateCallback, false);"];
 
+    ctx[@"onFocus"] = ^(JSValue *msg) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if (weakSelf) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf performSelector:@selector(relayoutHack) withObject:nil afterDelay:0.1];
+            }
+        }];
+    };
+    [ctx evaluateScript:@"document.getElementById('zss_editor_content').addEventListener('focus', onFocus, false);"];
 }
 
 #pragma mark - Mention & Hashtag Support Section
@@ -663,6 +666,20 @@
     NSString *result = [string stringByReplacingOccurrencesOfString:@"+" withString:@" "];
     result = [result stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     return result;
+}
+
+/**
+ Fixes strange issue when rich text editor is in bottom part of the screen.
+ Without this hack you will be able to reproduce it:
+ - editor should be on scroll view (TPKeyboardAvoidingScrollView in our case) in bottom part of the screen.
+ - user taps on editor
+ - iOS shows keyboard
+ - when you try to scroll the editor, scrolling goes past the content and scroll indicators aren't visible.
+ */
+- (void)relayoutHack
+{
+    self.editorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width + 1.0, self.bounds.size.height + 1.0);
+    // We don't bother to change it back because `layoutSubviews` will be called after.
 }
 
 @end

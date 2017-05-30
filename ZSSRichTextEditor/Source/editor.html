@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>ZSSRichTextEditor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <!-- Custom CSS Styling -->
 <style type="text/css">
@@ -45,24 +45,15 @@ html, body {
 }
       
 body {
-	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
 	height: 100%;
 }
 
 img.zs_active {
 	border: 2px dashed #000;
 }
-      
+
 audio {
 	padding: 20px 0;
-}
-
-div.zs_editor_content {
-	width: 100%;
-	height: 100%;
-	-webkit-overflow-scrolling: touch;
-	overflow:auto;
 }
 
 [placeholder]:empty:before {
@@ -82,9 +73,6 @@ div.zs_editor_content {
 
 	<!-- ZSSRichTextEditor Editable Content -->
 	<div id="zss_editor_content" class="zs_editor_content" contenteditable="true" placeholder=""></div>
-
-	<!-- Footer -->
-	<div id="zss_editor_footer"></div>
 
 </body>
 </html>

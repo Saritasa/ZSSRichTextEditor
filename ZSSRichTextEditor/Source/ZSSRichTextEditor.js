@@ -34,7 +34,7 @@ zss_editor.updateScrollOffset = false;
  * The initializer function that must be called onLoad
  */
 zss_editor.init = function() {
-    
+
     $('#zss_editor_content').on('touchend', function(e) {
                                 zss_editor.enabledEditingItems(e);
                                 var clicked = $(e.target);
@@ -68,7 +68,7 @@ zss_editor.init = function() {
                  zss_editor.focusEditor();
                  }
                  });
-    
+
 }//end
 
 zss_editor.updateOffset = function() {
@@ -159,9 +159,6 @@ zss_editor.calculateEditorHeightWithCaretPosition = function() {
         newPos = c - height + lineHeight;
     }
 
-    console.log("newPos " + newPos);
-    console.log("height " + height);
-    console.log("getContentHeight " + zss_editor.getContentHeight());
     window.scrollTo(0, newPos);
 }
 
@@ -172,8 +169,15 @@ zss_editor.getLineHeight = function() {
 
 zss_editor.backuprange = function(){
     var selection = window.getSelection();
-    var range = selection.getRangeAt(0);
-    zss_editor.currentSelection = {"startContainer": range.startContainer, "startOffset":range.startOffset,"endContainer":range.endContainer, "endOffset":range.endOffset};
+    if (selection.rangeCount > 0) {
+        var range = selection.getRangeAt(0);
+        zss_editor.currentSelection = {
+            "startContainer": range.startContainer,
+            "startOffset":range.startOffset,
+            "endContainer":range.endContainer,
+            "endOffset":range.endOffset
+        };
+    }
 }
 
 zss_editor.restorerange = function(){
@@ -275,9 +279,6 @@ zss_editor.setParagraph = function() {
     zss_editor.enabledEditingItems();
 }
 
-// Need way to remove formatBlock
-console.log('WARNING: We need a way to remove formatBlock items');
-
 zss_editor.undo = function() {
     document.execCommand('undo', false, null);
     zss_editor.enabledEditingItems();
@@ -363,7 +364,6 @@ zss_editor.insertLink = function(url, title) {
     
     zss_editor.restorerange();
     var sel = document.getSelection();
-    console.log(sel);
     if (sel.toString().length != 0) {
         if (sel.rangeCount) {
             
@@ -603,18 +603,18 @@ zss_editor.enabledEditingItems = function(e) {
         
         // Background Color
         var bgColor = t.css('backgroundColor');
-        if (bgColor.length != 0 && bgColor != 'rgba(0, 0, 0, 0)' && bgColor != 'rgb(0, 0, 0)' && bgColor != 'transparent') {
+        if (typeof(bgColor) != "undefined" && bgColor.length != 0 && bgColor != 'rgba(0, 0, 0, 0)' && bgColor != 'rgb(0, 0, 0)' && bgColor != 'transparent') {
             items.push('backgroundColor');
         }
         // Text Color
         var textColor = t.css('color');
-        if (textColor.length != 0 && textColor != 'rgba(0, 0, 0, 0)' && textColor != 'rgb(0, 0, 0)' && textColor != 'transparent') {
+        if (typeof(textColor) != "undefined" && textColor.length != 0 && textColor != 'rgba(0, 0, 0, 0)' && textColor != 'rgb(0, 0, 0)' && textColor != 'transparent') {
             items.push('textColor');
         }
 		
 		//Fonts
 		var font = t.css('font-family');
-		if (font.length != 0 && font != 'Arial, Helvetica, sans-serif') {
+		if (typeof(font) != "undefined" && font.length != 0 && font != 'Arial, Helvetica, sans-serif') {
 			items.push('fonts');	
 		}
 		
