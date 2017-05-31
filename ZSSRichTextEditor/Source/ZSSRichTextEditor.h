@@ -29,6 +29,8 @@
 
 - (BOOL)richTextEditor:(nonnull ZSSRichTextEditor *)editor shouldInteractWithURL:(nullable NSURL *)url;
 
+- (BOOL)richTextEditor:(nonnull ZSSRichTextEditor *)editor didChangeContentHeight:(CGFloat)height;
+
 @end
 
 /**
@@ -45,11 +47,6 @@
  *  If the HTML should be formatted to be pretty
  */
 @property (nonatomic) BOOL formatHTML;
-
-/**
- * If the sub class recieves text did change events or not
- */
-@property (nonatomic) BOOL receiveEditorDidChangeEvents;
 
 /**
  *  The placeholder text to use if there is no editor content

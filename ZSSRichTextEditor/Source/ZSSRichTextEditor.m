@@ -77,8 +77,7 @@
 - (void)setup
 {
     self.editorLoaded = NO;
-    self.receiveEditorDidChangeEvents = YES;
-    self.formatHTML = YES;
+    self.formatHTML = NO;
 
     self.toolbarView = [[ZSSToolbarView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 44.0)];
 
@@ -413,20 +412,17 @@
      */
     __weak typeof(self) weakSelf = self;
     JSContext *ctx = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-    ctx[@"contentUpdateCallback"] = ^(JSValue *msg) {
+    ctx[@"onInput"] = ^(JSValue *msg) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if (weakSelf) {
                 __strong typeof(weakSelf) strongSelf = weakSelf;
-                if (strongSelf.receiveEditorDidChangeEvents) {
-                    if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
-                        [strongSelf.delegate richTextEditor:strongSelf didChangeText:[strongSelf getText] html:[strongSelf getHTML]];
-                    }
+                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+                    [strongSelf.delegate richTextEditor:strongSelf didChangeText:[strongSelf getText] html:[strongSelf getHTML]];
                 }
                 [strongSelf checkForMentionOrHashtagInText:[strongSelf getText]];
             }
         }];
     };
-    [ctx evaluateScript:@"document.getElementById('zss_editor_content').addEventListener('input', contentUpdateCallback, false);"];
 
     ctx[@"onFocus"] = ^(JSValue *msg) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -436,7 +432,19 @@
             }
         }];
     };
-    [ctx evaluateScript:@"document.getElementById('zss_editor_content').addEventListener('focus', onFocus, false);"];
+
+    ctx[@"onContentHeightChange"] = ^(JSValue *msg) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if (weakSelf) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeContentHeight:)]) {
+                    CGFloat h = ceil([[msg toObject] floatValue]);
+                    NSLog(@"%f", h);
+                    [strongSelf.delegate richTextEditor:strongSelf didChangeContentHeight:h];
+                }
+            }
+        }];
+    };
 }
 
 #pragma mark - Mention & Hashtag Support Section

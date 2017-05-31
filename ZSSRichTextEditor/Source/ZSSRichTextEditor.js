@@ -24,6 +24,8 @@ zss_editor.currentEditingImage;
 // The current editing link
 zss_editor.currentEditingLink;
 
+zss_editor.contentHeight = 0;
+
 // The objects that are enabled
 zss_editor.enabledItems = {};
 
@@ -34,6 +36,11 @@ zss_editor.updateScrollOffset = false;
  * The initializer function that must be called onLoad
  */
 zss_editor.init = function() {
+
+    var editor = document.getElementById('zss_editor_content');
+
+    editor.addEventListener('input', zss_editor.onInput, false);
+    editor.addEventListener('focus', zss_editor.onFocus, false);
 
     $('#zss_editor_content').on('touchend', function(e) {
                                 zss_editor.enabledEditingItems(e);
@@ -69,6 +76,8 @@ zss_editor.init = function() {
                  }
                  });
 
+    zss_editor.notifyContentHeightChangeIfNeeded();
+
 }//end
 
 zss_editor.updateOffset = function() {
@@ -89,6 +98,23 @@ zss_editor.updateOffset = function() {
     }
 
     zss_editor.setScrollPosition();
+}
+
+zss_editor.onInput = function(msg) {
+    zss_editor.notifyContentHeightChangeIfNeeded();
+    onInput(msg);
+}
+
+zss_editor.onFocus = function(msg) {
+    onFocus(msg);
+}
+
+zss_editor.notifyContentHeightChangeIfNeeded = function() {
+    var h = document.body.scrollHeight;
+    if (h != zss_editor.contentHeight) {
+        onContentHeightChange(h);
+        zss_editor.contentHeight = h;
+    }
 }
 
 zss_editor.getContentHeight = function() {
