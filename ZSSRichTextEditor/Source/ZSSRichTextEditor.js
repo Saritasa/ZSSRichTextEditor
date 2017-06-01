@@ -70,11 +70,6 @@ zss_editor.init = function() {
     $(window).on('touchstart', function(e) {
                  zss_editor.isDragging = false;
                  });
-    $(window).on('touchend', function(e) {
-                 if (!zss_editor.isDragging && (e.target.id == "zss_editor_footer"||e.target.nodeName.toLowerCase() == "html")) {
-                 zss_editor.focusEditor();
-                 }
-                 });
 
     zss_editor.notifyContentHeightChangeIfNeeded();
 
@@ -702,7 +697,7 @@ zss_editor.focusEditor = function() {
     var selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    editor.focus();
+    editor.get(0).focus();
 }
 
 zss_editor.blurEditor = function() {
