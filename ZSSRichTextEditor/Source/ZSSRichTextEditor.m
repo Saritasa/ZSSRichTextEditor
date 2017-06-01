@@ -636,8 +636,6 @@
 
 
 - (NSString *)tidyHTML:(NSString *)html {
-    html = [html stringByReplacingOccurrencesOfString:@"<br>" withString:@"<br />"];
-    html = [html stringByReplacingOccurrencesOfString:@"<hr>" withString:@"<hr />"];
     if (self.formatHTML) {
         html = [self.editorView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"style_html(\"%@\");", html]];
     }
