@@ -439,7 +439,6 @@
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeContentHeight:)]) {
                     CGFloat h = ceil([[msg toObject] floatValue]);
-                    NSLog(@"%f", h);
                     [strongSelf.delegate richTextEditor:strongSelf didChangeContentHeight:h];
                 }
             }
@@ -636,6 +635,11 @@
 
 
 - (NSString *)tidyHTML:(NSString *)html {
+    // When user stats typing "Foo" then hits enter the html will be "Foo<div><br></div>".
+    // We solve it by replacing div and 2 br tags.
+    html = [html stringByReplacingOccurrencesOfString:@"<div>" withString:@"<br>"];
+    html = [html stringByReplacingOccurrencesOfString:@"<\/div>" withString:@""];
+    html = [html stringByReplacingOccurrencesOfString:@"<br><br>" withString:@"<br>"];
     if (self.formatHTML) {
         html = [self.editorView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"style_html(\"%@\");", html]];
     }
