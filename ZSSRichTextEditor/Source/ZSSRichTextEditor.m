@@ -76,15 +76,14 @@
 
 - (void)setup
 {
+    self.toolbarView = [[ZSSToolbarView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 44.0)];
+
     self.editorLoaded = NO;
     self.formatHTML = NO;
     self.editingEnabled = YES;
 
-    self.toolbarView = [[ZSSToolbarView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 44.0)];
-
     self.editorView = [[UIWebView alloc] initWithFrame:CGRectZero];
     self.editorView.delegate = self;
-    self.editorView.cjw_inputAccessoryView = self.toolbarView;
     self.editorView.opaque = NO;
     self.editorView.keyboardDisplayRequiresUserAction = NO;
     self.editorView.scalesPageToFit = YES;
@@ -211,6 +210,7 @@
 - (void)setEditingEnabled:(BOOL)editingEnabled
 {
     _editingEnabled = editingEnabled;
+    self.editorView.cjw_inputAccessoryView = editingEnabled ? self.toolbarView : nil;
     if (self.editorLoaded) {
         NSString *js = [NSString stringWithFormat:@"zss_editor.setContentEditable(%@);", editingEnabled ? @"true" : @"false"];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
@@ -219,8 +219,10 @@
 
 - (void)focusTextEditor {
     self.editorView.keyboardDisplayRequiresUserAction = NO;
-    NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
-    [self.editorView stringByEvaluatingJavaScriptFromString:js];
+    if (self.editingEnabled) {
+        NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
+        [self.editorView stringByEvaluatingJavaScriptFromString:js];
+    }
 }
 
 - (void)blurTextEditor {
