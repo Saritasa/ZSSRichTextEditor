@@ -78,6 +78,7 @@
 {
     self.editorLoaded = NO;
     self.formatHTML = NO;
+    self.editingEnabled = YES;
 
     self.toolbarView = [[ZSSToolbarView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 44.0)];
 
@@ -205,6 +206,15 @@
 {
     // TODO: we probably should implement all methods related to UIResponder, but for now this does the job.
     return [ZSSRichTextEditor viewContainsFirstResponder:self.editorView];
+}
+
+- (void)setEditingEnabled:(BOOL)editingEnabled
+{
+    _editingEnabled = editingEnabled;
+    if (self.editorLoaded) {
+        NSString *js = [NSString stringWithFormat:@"zss_editor.setContentEditable(%@);", editingEnabled ? @"true" : @"false"];
+        [self.editorView stringByEvaluatingJavaScriptFromString:js];
+    }
 }
 
 - (void)focusTextEditor {
@@ -420,6 +430,8 @@
     if (self.customCSS) {
         [self updateCSS];
     }
+
+    self.editingEnabled = self.editingEnabled;
 
     /*
      

@@ -720,4 +720,9 @@ zss_editor.setCustomCSS = function(customCSS) {
     
 }
 
+zss_editor.setContentEditable = function(editable) {
+    var editor = document.getElementById('zss_editor_content');
+    editor.contentEditable = editable;
+}
+
 //end

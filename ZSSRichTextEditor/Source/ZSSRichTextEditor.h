@@ -54,6 +54,11 @@
 @property (nonatomic) BOOL scrollEnabled;
 
 /**
+ Shows whether editing enabled or not.
+ */
+@property (nonatomic) BOOL editingEnabled;
+
+/**
  *  The placeholder text to use if there is no editor content
  */
 @property (nonatomic, strong, nullable) NSString *placeholder;
