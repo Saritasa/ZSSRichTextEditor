@@ -33,6 +33,10 @@
 
 - (void)richTextEditorDidFinishLoad:(nonnull ZSSRichTextEditor *)editor;
 
+- (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor
+didChangeCaretYPostion:(CGFloat)caretYPosition
+            lineHeight:(CGFloat)lineHeight;
+
 @end
 
 /**

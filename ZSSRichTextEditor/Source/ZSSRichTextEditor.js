@@ -26,6 +26,8 @@ zss_editor.currentEditingLink;
 
 zss_editor.contentHeight = 0;
 
+zss_editor.caretYPosition = 0;
+
 // The objects that are enabled
 zss_editor.enabledItems = {};
 
@@ -173,23 +175,34 @@ zss_editor.getCaretYPosition = function() {
     }
 }
 
+zss_editor.isCaretYPositionAvaialable = function() {
+    return window.getSelection().rangeCount > 0;
+}
+
 zss_editor.calculateEditorHeightWithCaretPosition = function() {
+    if (zss_editor.isCaretYPositionAvaialable()) {
+        var c = zss_editor.getCaretYPosition();
+        if (c == zss_editor.caretYPosition) {
+            return;
+        }
+        zss_editor.caretYPosition = c;
 
-    var c = zss_editor.getCaretYPosition();
+        var offsetY = window.document.body.scrollTop;
+        var height = Math.max(window.innerHeight, document.documentElement.clientHeight);
+        var lineHeight = zss_editor.getLineHeight();
 
-    var offsetY = window.document.body.scrollTop;
-    var height = Math.max(window.innerHeight, document.documentElement.clientHeight);
-    var lineHeight = zss_editor.getLineHeight();
-    
-    var newPos = window.pageYOffset;
-    
-    if (c < offsetY) {
-        newPos = c;
-    } else if (c + lineHeight > (offsetY + height)) {
-        newPos = c - height + lineHeight;
+        var newPos = window.pageYOffset;
+
+        if (c < offsetY) {
+            newPos = c;
+        } else if (c + lineHeight > (offsetY + height)) {
+            newPos = c - height + lineHeight;
+        }
+
+        window.scrollTo(0, newPos);
+        
+        onCaretYPositionChange(c, lineHeight);
     }
-
-    window.scrollTo(0, newPos);
 }
 
 zss_editor.getLineHeight = function() {

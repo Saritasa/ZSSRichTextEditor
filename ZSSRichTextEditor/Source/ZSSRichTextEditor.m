@@ -455,6 +455,19 @@
         }];
     };
 
+    ctx[@"onCaretYPositionChange"] = ^(JSValue *msg1, JSValue *msg2) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if (weakSelf) {
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+                    CGFloat y = ceil([[msg1 toObject] floatValue]);
+                    CGFloat h = ceil([[msg2 toObject] floatValue]);
+                    [strongSelf.delegate richTextEditor:self didChangeCaretYPostion:y lineHeight:h];
+                }
+            }
+        }];
+    };
+
     if (!self.internalHTML) {
         self.internalHTML = @"";
     }
