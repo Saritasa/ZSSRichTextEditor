@@ -16,7 +16,7 @@
 
 @import JavaScriptCore;
 
-@interface ZSSRichTextEditor () <UIWebViewDelegate, HRColorPickerViewControllerDelegate>
+@interface ZSSRichTextEditor () <UIWebViewDelegate, UIScrollViewDelegate, HRColorPickerViewControllerDelegate>
 
 @property (nonatomic) ZSSToolbarView *toolbarView;
 
@@ -84,8 +84,8 @@
 
     self.editorView = [[UIWebView alloc] initWithFrame:CGRectZero];
     self.editorView.delegate = self;
+    self.editorView.scrollView.delegate = self;
     self.editorView.opaque = NO;
-    self.editorView.keyboardDisplayRequiresUserAction = NO;
     self.editorView.scalesPageToFit = YES;
     self.editorView.dataDetectorTypes = UIDataDetectorTypeNone;
     self.editorView.backgroundColor = [UIColor whiteColor];
@@ -218,7 +218,6 @@
 }
 
 - (void)focusTextEditor {
-    self.editorView.keyboardDisplayRequiresUserAction = NO;
     if (self.editingEnabled) {
         NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
@@ -469,6 +468,15 @@
     }
 
     self.editingEnabled = self.editingEnabled;
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (!self.scrollEnabled) {
+        scrollView.bounds = self.editorView.bounds;
+    }
 }
 
 #pragma mark - Mention & Hashtag Support Section
