@@ -219,6 +219,7 @@
 
 - (void)focusTextEditor {
     if (self.editingEnabled) {
+        self.editorView.keyboardDisplayRequiresUserAction = NO;
         NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
     }
@@ -468,6 +469,10 @@
     }
 
     self.editingEnabled = self.editingEnabled;
+
+    if ([self.delegate respondsToSelector:@selector(richTextEditorDidFinishLoad:)]) {
+        [self.delegate richTextEditorDidFinishLoad:self];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate

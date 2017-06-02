@@ -31,6 +31,8 @@
 
 - (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didChangeContentHeight:(CGFloat)height;
 
+- (void)richTextEditorDidFinishLoad:(nonnull ZSSRichTextEditor *)editor;
+
 @end
 
 /**
