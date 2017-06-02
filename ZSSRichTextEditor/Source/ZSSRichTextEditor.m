@@ -420,26 +420,6 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     self.editorLoaded = YES;
 
-    if (!self.internalHTML) {
-        self.internalHTML = @"";
-    }
-    [self updateHTML];
-
-    if(self.placeholder) {
-        [self setPlaceholderText];
-    }
-    
-    if (self.customCSS) {
-        [self updateCSS];
-    }
-
-    self.editingEnabled = self.editingEnabled;
-
-    /*
-     
-     Callback for when text is changed, solution posted by richardortiz84 https://github.com/nnhubbard/ZSSRichTextEditor/issues/5
-     
-     */
     __weak typeof(self) weakSelf = self;
     JSContext *ctx = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     ctx[@"onInput"] = ^(JSValue *msg) {
@@ -474,6 +454,21 @@
             }
         }];
     };
+
+    if (!self.internalHTML) {
+        self.internalHTML = @"";
+    }
+    [self updateHTML];
+
+    if(self.placeholder) {
+        [self setPlaceholderText];
+    }
+
+    if (self.customCSS) {
+        [self updateCSS];
+    }
+
+    self.editingEnabled = self.editingEnabled;
 }
 
 #pragma mark - Mention & Hashtag Support Section

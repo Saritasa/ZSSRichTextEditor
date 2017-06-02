@@ -71,9 +71,19 @@ zss_editor.init = function() {
                  zss_editor.isDragging = false;
                  });
 
-    zss_editor.notifyContentHeightChangeIfNeeded();
-
-}//end
+    // Observe resizing.
+    window.addEventListener('resize', resizeThrottler, false);
+    var resizeTimeout;
+    function resizeThrottler() {
+        // ignore resize events as long as an actualResizeHandler execution is in the queue
+        if ( !resizeTimeout ) {
+            resizeTimeout = setTimeout(function() {
+                                       resizeTimeout = null;
+                                       zss_editor.notifyContentHeightChangeIfNeeded();
+                                       }, 66);
+        }
+    }
+}
 
 zss_editor.updateOffset = function() {
     
@@ -138,8 +148,7 @@ zss_editor.setPlaceholder = function(placeholder) {
         }
     });
 	
-	
-    
+	zss_editor.notifyContentHeightChangeIfNeeded();
 }
 
 zss_editor.setFooterHeight = function(footerHeight) {
@@ -509,6 +518,7 @@ zss_editor.insertImageBase64String = function(imageBase64String, alt) {
 zss_editor.setHTML = function(html) {
     var editor = $('#zss_editor_content');
     editor.html(html);
+    zss_editor.notifyContentHeightChangeIfNeeded();
 }
 
 zss_editor.insertHTML = function(html) {
