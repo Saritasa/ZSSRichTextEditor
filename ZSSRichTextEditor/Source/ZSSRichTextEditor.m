@@ -191,6 +191,16 @@
 
 #pragma mark - Editor Interaction
 
+- (void)setScrollEnabled:(BOOL)scrollEnabled
+{
+    self.editorView.scrollView.scrollEnabled = scrollEnabled;
+}
+
+- (BOOL)scrollEnabled
+{
+    return self.editorView.scrollView.isScrollEnabled;
+}
+
 - (void)focusTextEditor {
     self.editorView.keyboardDisplayRequiresUserAction = NO;
     NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];

@@ -49,6 +49,11 @@
 @property (nonatomic) BOOL formatHTML;
 
 /**
+ Shows whether scroll should be enabled or not.
+ */
+@property (nonatomic) BOOL scrollEnabled;
+
+/**
  *  The placeholder text to use if there is no editor content
  */
 @property (nonatomic, strong, nullable) NSString *placeholder;
