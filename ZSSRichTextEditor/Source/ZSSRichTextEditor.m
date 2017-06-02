@@ -201,6 +201,12 @@
     return self.editorView.scrollView.isScrollEnabled;
 }
 
+- (BOOL)isFocused
+{
+    // TODO: we probably should implement all methods related to UIResponder, but for now this does the job.
+    return [ZSSRichTextEditor viewContainsFirstResponder:self.editorView];
+}
+
 - (void)focusTextEditor {
     self.editorView.keyboardDisplayRequiresUserAction = NO;
     NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
@@ -700,6 +706,23 @@
 {
     self.editorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width + 1.0, self.bounds.size.height + 1.0);
     // We don't bother to change it back because `layoutSubviews` will be called after.
+}
+
+/**
+ Recursively checks the view hierarchy whether the view is first responder or not.
+ */
++ (BOOL)viewContainsFirstResponder:(UIView *)view
+{
+    if (view.isFirstResponder) {
+        return YES;
+    }
+
+    for (UIView *childView in view.subviews) {
+        if ([ZSSRichTextEditor viewContainsFirstResponder:childView]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end
