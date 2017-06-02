@@ -29,7 +29,7 @@
 
 - (BOOL)richTextEditor:(nonnull ZSSRichTextEditor *)editor shouldInteractWithURL:(nullable NSURL *)url;
 
-- (BOOL)richTextEditor:(nonnull ZSSRichTextEditor *)editor didChangeContentHeight:(CGFloat)height;
+- (void)richTextEditor:(nonnull ZSSRichTextEditor *)editor didChangeContentHeight:(CGFloat)height;
 
 @end
 
