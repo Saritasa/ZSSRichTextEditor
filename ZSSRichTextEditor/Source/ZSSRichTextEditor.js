@@ -105,7 +105,7 @@ zss_editor.onFocus = function(msg) {
 }
 
 zss_editor.notifyContentHeightChangeIfNeeded = function() {
-    var h = document.body.scrollHeight;
+    var h = document.getElementById('zss_editor_content').clientHeight;
     if (h != zss_editor.contentHeight) {
         onContentHeightChange(h);
         zss_editor.contentHeight = h;
