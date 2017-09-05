@@ -16,13 +16,13 @@ zss_editor.isUsingiOS = true;
 zss_editor.isDragging = false;
 
 // The current selection
-zss_editor.currentSelection;
+zss_editor.currentSelection = null;
 
 // The current editing image
-zss_editor.currentEditingImage;
+zss_editor.currentEditingImage = null;
 
 // The current editing link
-zss_editor.currentEditingLink;
+zss_editor.currentEditingLink = null;
 
 zss_editor.contentHeight = 0;
 
@@ -45,62 +45,63 @@ zss_editor.init = function() {
     editor.addEventListener('focus', zss_editor.onFocus, false);
 
     $('#zss_editor_content').on('touchend', function(e) {
-                                zss_editor.enabledEditingItems(e);
-                                var clicked = $(e.target);
-                                if (!clicked.hasClass('zs_active')) {
-                                $('img').removeClass('zs_active');
-                                }
-                                });
+        zss_editor.enabledEditingItems(e);
+        var clicked = $(e.target);
+        if (!clicked.hasClass('zs_active')) {
+            $('img').removeClass('zs_active');
+        }
+    });
 
-    $(document).on('selectionchange',function(e){
-                   zss_editor.calculateEditorHeightWithCaretPosition();
-                   zss_editor.setScrollPosition();
-                   zss_editor.enabledEditingItems(e);
-                   });
-    
+    $(document).on('selectionchange', function(e) {
+        zss_editor.calculateEditorHeightWithCaretPosition();
+        zss_editor.setScrollPosition();
+        zss_editor.enabledEditingItems(e);
+    });
+
     $(window).on('scroll', function(e) {
-                 zss_editor.updateOffset();
-                 });
-    
+        zss_editor.updateOffset();
+    });
+
     // Make sure that when we tap anywhere in the document we focus on the editor
     $(window).on('touchmove', function(e) {
-                 zss_editor.isDragging = true;
-                 zss_editor.updateScrollOffset = true;
-                 zss_editor.setScrollPosition();
-                 zss_editor.enabledEditingItems(e);
-                 });
+        zss_editor.isDragging = true;
+        zss_editor.updateScrollOffset = true;
+        zss_editor.setScrollPosition();
+        zss_editor.enabledEditingItems(e);
+    });
     $(window).on('touchstart', function(e) {
-                 zss_editor.isDragging = false;
-                 });
+        zss_editor.isDragging = false;
+    });
 
     // Observe resizing.
     window.addEventListener('resize', resizeThrottler, false);
     var resizeTimeout;
+
     function resizeThrottler() {
         // ignore resize events as long as an actualResizeHandler execution is in the queue
-        if ( !resizeTimeout ) {
+        if (!resizeTimeout) {
             resizeTimeout = setTimeout(function() {
-                                       resizeTimeout = null;
-                                       zss_editor.notifyContentHeightChangeIfNeeded();
-                                       }, 66);
+                resizeTimeout = null;
+                zss_editor.notifyContentHeightChangeIfNeeded();
+            }, 66);
         }
     }
 }
 
 zss_editor.updateOffset = function() {
-    
+
     if (!zss_editor.updateScrollOffset)
         return;
-    
+
     var offsetY = window.document.body.scrollTop;
 
     var maxOffsetY = zss_editor.getContentHeight();
-    
-    if (maxOffsetY < 0)
+
+    if (maxOffsetY < 0) {
         maxOffsetY = 0;
-    
-    if (offsetY > maxOffsetY)
-    {
+    }
+
+    if (offsetY > maxOffsetY) {
         window.scrollTo(0, maxOffsetY);
     }
 
@@ -127,30 +128,31 @@ zss_editor.notifyContentHeightChangeIfNeeded = function() {
 zss_editor.getContentHeight = function() {
     var body = document.body;
     var html = document.documentElement;
-    return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight,
+        html.scrollHeight, html.offsetHeight);
 }
 
 zss_editor.setScrollPosition = function() {
     var position = window.pageYOffset;
-    window.location = 'scroll://'+position;
+    window.location = 'scroll://' + position;
 }
 
 zss_editor.setPlaceholder = function(placeholder) {
-    
+
     var editor = $('#zss_editor_content');
-    
+
     //set placeHolder
-	editor.attr("placeholder",placeholder);
-	
-    //set focus			 
-	editor.focusout(function(){
-        var element = $(this);        
+    editor.attr("placeholder", placeholder);
+
+    //set focus
+    editor.focusout(function() {
+        var element = $(this);
         if (!element.text().trim().length) {
             element.empty();
         }
     });
-	
-	zss_editor.notifyContentHeightChangeIfNeeded();
+
+    zss_editor.notifyContentHeightChangeIfNeeded();
 }
 
 zss_editor.setFooterHeight = function(footerHeight) {
@@ -164,7 +166,7 @@ zss_editor.getCaretYPosition = function() {
     //sel.collapseToStart();
     if (sel.rangeCount > 0) {
         var range = sel.getRangeAt(0);
-        var span = document.createElement('span');// something happening here preventing selection of elements
+        var span = document.createElement('span'); // something happening here preventing selection of elements
         range.collapse(false);
         range.insertNode(span);
         var topPosition = span.offsetTop;
@@ -200,40 +202,43 @@ zss_editor.calculateEditorHeightWithCaretPosition = function() {
         }
 
         window.scrollTo(0, newPos);
-        
+
         onCaretYPositionChange(c, lineHeight);
     }
 }
 
 zss_editor.getLineHeight = function() {
-    var lineHeight = window.getComputedStyle(window.document.body).getPropertyValue('line-height');
+    var lineHeight = window.getComputedStyle(window.document.body).getPropertyValue(
+        'line-height');
     return parseInt(lineHeight, 10);
 }
 
-zss_editor.backuprange = function(){
+zss_editor.backuprange = function() {
     var selection = window.getSelection();
     if (selection.rangeCount > 0) {
         var range = selection.getRangeAt(0);
         zss_editor.currentSelection = {
             "startContainer": range.startContainer,
-            "startOffset":range.startOffset,
-            "endContainer":range.endContainer,
-            "endOffset":range.endOffset
+            "startOffset": range.startOffset,
+            "endContainer": range.endContainer,
+            "endOffset": range.endOffset
         };
     }
 }
 
-zss_editor.restorerange = function(){
+zss_editor.restorerange = function() {
     var selection = window.getSelection();
     selection.removeAllRanges();
     var range = document.createRange();
-    range.setStart(zss_editor.currentSelection.startContainer, zss_editor.currentSelection.startOffset);
-    range.setEnd(zss_editor.currentSelection.endContainer, zss_editor.currentSelection.endOffset);
+    range.setStart(zss_editor.currentSelection.startContainer, zss_editor.currentSelection
+        .startOffset);
+    range.setEnd(zss_editor.currentSelection.endContainer, zss_editor.currentSelection
+        .endOffset);
     selection.addRange(range);
 }
 
 zss_editor.getSelectedNode = function() {
-    var node,selection;
+    var node, selection;
     if (window.getSelection) {
         selection = getSelection();
         node = selection.anchorNode;
@@ -242,7 +247,7 @@ zss_editor.getSelectedNode = function() {
         selection = document.selection
         var range = selection.getRangeAt ? selection.getRangeAt(0) : selection.createRange();
         node = range.commonAncestorContainer ? range.commonAncestorContainer :
-        range.parentElement ? range.parentElement() : range.item(0);
+            range.parentElement ? range.parentElement() : range.item(0);
     }
     if (node) {
         return (node.nodeName == "#text" ? node.parentNode : node);
@@ -297,14 +302,15 @@ zss_editor.setHorizontalRule = function() {
 zss_editor.setHeading = function(heading) {
     var current_selection = $(zss_editor.getSelectedNode());
     var t = current_selection.prop("tagName").toLowerCase();
-    var is_heading = (t == 'h1' || t == 'h2' || t == 'h3' || t == 'h4' || t == 'h5' || t == 'h6');
+    var is_heading = (t == 'h1' || t == 'h2' || t == 'h3' || t == 'h4' || t ==
+        'h5' || t == 'h6');
     if (is_heading && heading == t) {
         var c = current_selection.html();
         current_selection.replaceWith(c);
     } else {
-        document.execCommand('formatBlock', false, '<'+heading+'>');
+        document.execCommand('formatBlock', false, '<' + heading + '>');
     }
-    
+
     zss_editor.enabledEditingItems();
 }
 
@@ -318,7 +324,7 @@ zss_editor.setParagraph = function() {
     } else {
         document.execCommand('formatBlock', false, '<p>');
     }
-    
+
     zss_editor.enabledEditingItems();
 }
 
@@ -374,23 +380,21 @@ zss_editor.setOutdent = function() {
 
 zss_editor.setFontFamily = function(fontFamily) {
 
-	zss_editor.restorerange();
-	document.execCommand("styleWithCSS", null, true);
-	document.execCommand("fontName", false, fontFamily);
-	document.execCommand("styleWithCSS", null, false);
-	zss_editor.enabledEditingItems();
-		
+    zss_editor.restorerange();
+    document.execCommand("styleWithCSS", null, true);
+    document.execCommand("fontName", false, fontFamily);
+    document.execCommand("styleWithCSS", null, false);
+    zss_editor.enabledEditingItems();
 }
 
 zss_editor.setTextColor = function(color) {
-		
+
     zss_editor.restorerange();
     document.execCommand("styleWithCSS", null, true);
     document.execCommand('foreColor', false, color);
     document.execCommand("styleWithCSS", null, false);
     zss_editor.enabledEditingItems();
     // document.execCommand("removeFormat", false, "foreColor"); // Removes just foreColor
-	
 }
 
 zss_editor.setBackgroundColor = function(color) {
@@ -404,73 +408,72 @@ zss_editor.setBackgroundColor = function(color) {
 // Needs addClass method
 
 zss_editor.insertLink = function(url, title) {
-    
+
     zss_editor.restorerange();
     var sel = document.getSelection();
     if (sel.toString().length != 0) {
         if (sel.rangeCount) {
-            
+
             var el = document.createElement("a");
             el.setAttribute("href", url);
             el.setAttribute("title", title);
-            
+
             var range = sel.getRangeAt(0).cloneRange();
             range.surroundContents(el);
             sel.removeAllRanges();
             sel.addRange(range);
         }
+    } else {
+        document.execCommand("insertHTML", false, "<a href='" + url + "'>" +
+            title + "</a>");
     }
-    else
-    {
-        document.execCommand("insertHTML",false,"<a href='"+url+"'>"+title+"</a>");
-    }
-    
+
     zss_editor.enabledEditingItems();
 }
 
 zss_editor.updateLink = function(url, title) {
-    
-    zss_editor.restorerange();
-    
-    if (zss_editor.currentEditingLink) {
-        var c = zss_editor.currentEditingLink;
-        c.attr('href', url);
-        c.attr('title', title);
-    }
-    zss_editor.enabledEditingItems();
-    
-}//end
+
+        zss_editor.restorerange();
+
+        if (zss_editor.currentEditingLink) {
+            var c = zss_editor.currentEditingLink;
+            c.attr('href', url);
+            c.attr('title', title);
+        }
+        zss_editor.enabledEditingItems();
+
+    } //end
 
 zss_editor.updateImage = function(url, alt) {
-    
-    zss_editor.restorerange();
-    
-    if (zss_editor.currentEditingImage) {
-        var c = zss_editor.currentEditingImage;
-        c.attr('src', url);
-        c.attr('alt', alt);
-    }
-    zss_editor.enabledEditingItems();
-    
-}//end
+
+        zss_editor.restorerange();
+
+        if (zss_editor.currentEditingImage) {
+            var c = zss_editor.currentEditingImage;
+            c.attr('src', url);
+            c.attr('alt', alt);
+        }
+        zss_editor.enabledEditingItems();
+
+    } //end
 
 zss_editor.updateImageBase64String = function(imageBase64String, alt) {
-    
-    zss_editor.restorerange();
-    
-    if (zss_editor.currentEditingImage) {
-        var c = zss_editor.currentEditingImage;
-        var src = 'data:image/jpeg;base64,' + imageBase64String;
-        c.attr('src', src);
-        c.attr('alt', alt);
-    }
-    zss_editor.enabledEditingItems();
-    
-}//end
+
+        zss_editor.restorerange();
+
+        if (zss_editor.currentEditingImage) {
+            var c = zss_editor.currentEditingImage;
+            var src = 'data:image/jpeg;base64,' + imageBase64String;
+            c.attr('src', src);
+            c.attr('alt', alt);
+        }
+        zss_editor.enabledEditingItems();
+
+    } //end
 
 
 zss_editor.unlink = function() {
-    
+
     if (zss_editor.currentEditingLink) {
         var c = zss_editor.currentEditingLink;
         c.contents().unwrap();
@@ -479,7 +482,7 @@ zss_editor.unlink = function() {
 }
 
 zss_editor.quickLink = function() {
-    
+
     var sel = document.getSelection();
     var link_url = "";
     var test = new String(sel);
@@ -504,10 +507,9 @@ zss_editor.quickLink = function() {
             link_url = sel;
         }
     }
-    
+
     var html_code = '<a href="' + link_url + '">' + sel + '</a>';
     zss_editor.insertHTML(html_code);
-    
 }
 
 zss_editor.prepareInsert = function() {
@@ -516,14 +518,15 @@ zss_editor.prepareInsert = function() {
 
 zss_editor.insertImage = function(url, alt) {
     zss_editor.restorerange();
-    var html = '<img src="'+url+'" alt="'+alt+'" />';
+    var html = '<img src="' + url + '" alt="' + alt + '" />';
     zss_editor.insertHTML(html);
     zss_editor.enabledEditingItems();
 }
 
 zss_editor.insertImageBase64String = function(imageBase64String, alt) {
     zss_editor.restorerange();
-    var html = '<img src="data:image/jpeg;base64,'+imageBase64String+'" alt="'+alt+'" />';
+    var html = '<img src="data:image/jpeg;base64,' + imageBase64String +
+        '" alt="' + alt + '" />';
     zss_editor.insertHTML(html);
     zss_editor.enabledEditingItems();
 }
@@ -540,39 +543,43 @@ zss_editor.insertHTML = function(html) {
 }
 
 zss_editor.getHTML = function() {
-    
+
     // Images
     var img = $('img');
     if (img.length != 0) {
         $('img').removeClass('zs_active');
         $('img').each(function(index, e) {
-                      var image = $(this);
-                      var zs_class = image.attr('class');
-                      if (typeof(zs_class) != "undefined") {
-                      if (zs_class == '') {
-                      image.removeAttr('class');
-                      }
-                      }
-                      });
+            var image = $(this);
+            var zs_class = image.attr('class');
+            if (typeof(zs_class) != "undefined") {
+                if (zs_class == '') {
+                    image.removeAttr('class');
+                }
+            }
+        });
     }
-    
+
     // Blockquote
     var bq = $('blockquote');
     if (bq.length != 0) {
         bq.each(function() {
-                var b = $(this);
-                if (b.css('border').indexOf('none') != -1) {
-                b.css({'border': ''});
-                }
-                if (b.css('padding').indexOf('0px') != -1) {
-                b.css({'padding': ''});
-                }
+            var b = $(this);
+            if (b.css('border').indexOf('none') != -1) {
+                b.css({
+                    'border': ''
                 });
+            }
+            if (b.css('padding').indexOf('0px') != -1) {
+                b.css({
+                    'padding': ''
+                });
+            }
+        });
     }
-    
+
     // Get the contents
     var h = document.getElementById("zss_editor_content").innerHTML;
-    
+
     return h;
 }
 
@@ -585,7 +592,7 @@ zss_editor.isCommandEnabled = function(commandName) {
 }
 
 zss_editor.enabledEditingItems = function(e) {
-    
+
     console.log('enabledEditingItems');
     var items = [];
     if (zss_editor.isCommandEnabled('bold')) {
@@ -633,44 +640,49 @@ zss_editor.enabledEditingItems = function(e) {
     }
     // Images
     $('img').bind('touchstart', function(e) {
-                  $('img').removeClass('zs_active');
-                  $(this).addClass('zs_active');
-                  });
-    
+        $('img').removeClass('zs_active');
+        $(this).addClass('zs_active');
+    });
+
     // Use jQuery to figure out those that are not supported
     if (typeof(e) != "undefined") {
-        
+
         // The target element
         var s = zss_editor.getSelectedNode();
         var t = $(s);
         var nodeName = e.target.nodeName.toLowerCase();
-        
+
         // Background Color
         var bgColor = t.css('backgroundColor');
-        if (typeof(bgColor) != "undefined" && bgColor.length != 0 && bgColor != 'rgba(0, 0, 0, 0)' && bgColor != 'rgb(0, 0, 0)' && bgColor != 'transparent') {
+        if (typeof(bgColor) != "undefined" && bgColor.length != 0 && bgColor !=
+            'rgba(0, 0, 0, 0)' && bgColor != 'rgb(0, 0, 0)' && bgColor !=
+            'transparent') {
             items.push('backgroundColor');
         }
         // Text Color
         var textColor = t.css('color');
-        if (typeof(textColor) != "undefined" && textColor.length != 0 && textColor != 'rgba(0, 0, 0, 0)' && textColor != 'rgb(0, 0, 0)' && textColor != 'transparent') {
+        if (typeof(textColor) != "undefined" && textColor.length != 0 &&
+            textColor != 'rgba(0, 0, 0, 0)' && textColor != 'rgb(0, 0, 0)' &&
+            textColor != 'transparent') {
             items.push('textColor');
         }
-		
-		//Fonts
-		var font = t.css('font-family');
-		if (typeof(font) != "undefined" && font.length != 0 && font != 'Arial, Helvetica, sans-serif') {
-			items.push('fonts');	
-		}
-		
+
+        //Fonts
+        var font = t.css('font-family');
+        if (typeof(font) != "undefined" && font.length != 0 && font !=
+            'Arial, Helvetica, sans-serif') {
+            items.push('fonts');
+        }
+
         // Link
         if (nodeName == 'a') {
             zss_editor.currentEditingLink = t;
             var title = t.attr('title');
-            items.push('link:'+t.attr('href'));
+            items.push('link:' + t.attr('href'));
             if (t.attr('title') !== undefined) {
-                items.push('link-title:'+t.attr('title'));
+                items.push('link-title:' + t.attr('title'));
             }
-            
+
         } else {
             zss_editor.currentEditingLink = null;
         }
@@ -681,23 +693,21 @@ zss_editor.enabledEditingItems = function(e) {
         // Image
         if (nodeName == 'img') {
             zss_editor.currentEditingImage = t;
-            items.push('image:'+t.attr('src'));
+            items.push('image:' + t.attr('src'));
             if (t.attr('alt') !== undefined) {
-                items.push('image-alt:'+t.attr('alt'));
+                items.push('image-alt:' + t.attr('alt'));
             }
-            
         } else {
             zss_editor.currentEditingImage = null;
         }
-        
     }
-    
+
     if (items.length > 0) {
         if (zss_editor.isUsingiOS) {
             //window.location = "zss-callback/"+items.join(',');
-            window.location = "callback://0/"+items.join(',');
+            window.location = "callback://0/" + items.join(',');
         } else {
-            console.log("callback://"+items.join(','));
+            console.log("callback://" + items.join(','));
         }
     } else {
         if (zss_editor.isUsingiOS) {
@@ -706,11 +716,10 @@ zss_editor.enabledEditingItems = function(e) {
             console.log("callback://");
         }
     }
-    
 }
 
 zss_editor.focusEditor = function() {
-    
+
     // the following was taken from http://stackoverflow.com/questions/1125292/how-to-move-cursor-to-end-of-contenteditable-entity/3866442#3866442
     // and ensures we move the cursor to the end of the editor
     var editor = $('#zss_editor_content');
@@ -728,24 +737,10 @@ zss_editor.blurEditor = function() {
 }
 
 zss_editor.setCustomCSS = function(customCSS) {
-    
-    document.getElementsByTagName('style')[0].innerHTML=customCSS;
-    
-    //set focus
-    /*editor.focusout(function(){
-                    var element = $(this);
-                    if (!element.text().trim().length) {
-                    element.empty();
-                    }
-                    });*/
-    
-    
-    
+    document.getElementsByTagName('style')[0].innerHTML = customCSS;
 }
 
 zss_editor.setContentEditable = function(editable) {
     var editor = document.getElementById('zss_editor_content');
     editor.contentEditable = editable;
 }
-
-//end
