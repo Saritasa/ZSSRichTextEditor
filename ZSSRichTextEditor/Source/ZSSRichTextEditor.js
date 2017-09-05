@@ -641,7 +641,9 @@ zss_editor.enabledEditingItems = function(e) {
     // Images
     $('img').bind('touchstart', function(e) {
         $('img').removeClass('zs_active');
-        $(this).addClass('zs_active');
+        if (zss_editor.isContentEditable()) {
+            $(this).addClass('zs_active');
+        }
     });
 
     // Use jQuery to figure out those that are not supported
@@ -743,4 +745,9 @@ zss_editor.setCustomCSS = function(customCSS) {
 zss_editor.setContentEditable = function(editable) {
     var editor = document.getElementById('zss_editor_content');
     editor.contentEditable = editable;
+}
+
+zss_editor.isContentEditable = function() {
+    var editor = document.getElementById('zss_editor_content');
+    return editor.contentEditable == 'true'
 }
