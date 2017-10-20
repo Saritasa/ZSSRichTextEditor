@@ -38,6 +38,10 @@
 {
     [super layoutSubviews];
     [self layoutWithToolbarWidth:self.toolbar.frame.size.width];
+
+    // Make sure that scroll view is always on top.
+    // Otherwise in iOS11 it's under _UIToolbarContentView.
+    [self.scrollView.superview bringSubviewToFront:self.scrollView];
 }
 
 - (void)layoutWithToolbarWidth:(CGFloat)toolbarWidth
@@ -50,7 +54,7 @@
 
 - (void)setItems:(nonnull NSArray<ZSSBarButtonItem *> *)items animated:(BOOL)animated
 {
-    // TODO: find a way to calculate width based on acutal width of toolbar buttons.
+    // TODO: find a way to calculate width based on actual width of toolbar buttons.
     [self layoutWithToolbarWidth:[items count] * 40.0];
 
     self.items = items;
