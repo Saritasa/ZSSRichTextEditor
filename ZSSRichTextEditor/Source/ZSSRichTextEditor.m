@@ -718,11 +718,6 @@
 }
 
 
-- (BOOL)isIpad {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
-}
-
-
 - (NSString *)stringByDecodingURLFormat:(NSString *)string {
     NSString *result = [string stringByReplacingOccurrencesOfString:@"+" withString:@" "];
     result = [result stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
