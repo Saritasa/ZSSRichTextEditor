@@ -184,10 +184,6 @@ zss_editor.isCaretYPositionAvaialable = function() {
 zss_editor.calculateEditorHeightWithCaretPosition = function() {
     if (zss_editor.isCaretYPositionAvaialable()) {
         var c = zss_editor.getCaretYPosition();
-        if (c == zss_editor.caretYPosition) {
-            return;
-        }
-        zss_editor.caretYPosition = c;
 
         var offsetY = window.document.body.scrollTop;
         var height = Math.max(window.innerHeight, document.documentElement.clientHeight);
@@ -201,7 +197,13 @@ zss_editor.calculateEditorHeightWithCaretPosition = function() {
             newPos = c - height + lineHeight;
         }
 
+        // Always scroll to a new position. Prevents issues when cursor sometimes is under toolbar.
         window.scrollTo(0, newPos);
+
+        if (c == zss_editor.caretYPosition) {
+            return;
+        }
+        zss_editor.caretYPosition = c;
 
         onCaretYPositionChange(c, lineHeight);
     }
