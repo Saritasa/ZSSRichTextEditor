@@ -217,6 +217,15 @@
     }
 }
 
+- (void)setClearsFormatOnPaste:(BOOL)clearsFormatOnPaste
+{
+    _clearsFormatOnPaste = clearsFormatOnPaste;
+    if (self.editorLoaded) {
+        NSString *js = [NSString stringWithFormat:@"zss_editor.clearsFormatOnPaste = %@;", clearsFormatOnPaste ? @"true" : @"false"];
+        [self.editorView stringByEvaluatingJavaScriptFromString:js];
+    }
+}
+
 - (void)focusTextEditor {
     if (self.editingEnabled) {
         self.editorView.keyboardDisplayRequiresUserAction = NO;
@@ -482,6 +491,7 @@
     }
 
     self.editingEnabled = self.editingEnabled;
+    self.clearsFormatOnPaste = self.clearsFormatOnPaste;
 
     if ([self.delegate respondsToSelector:@selector(richTextEditorDidFinishLoad:)]) {
         [self.delegate richTextEditorDidFinishLoad:self];

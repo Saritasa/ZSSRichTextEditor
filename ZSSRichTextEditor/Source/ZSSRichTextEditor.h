@@ -65,6 +65,11 @@ didChangeCaretYPostion:(CGFloat)caretYPosition
 @property (nonatomic) BOOL editingEnabled;
 
 /**
+ Shows whether the editor clears formatting on paste.
+ */
+@property (nonatomic) BOOL clearsFormatOnPaste;
+
+/**
  *  The placeholder text to use if there is no editor content
  */
 @property (nonatomic, strong, nullable) NSString *placeholder;

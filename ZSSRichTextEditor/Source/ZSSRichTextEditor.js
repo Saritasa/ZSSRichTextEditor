@@ -34,6 +34,8 @@ zss_editor.enabledItems = {};
 // Sets to true when extra footer gap shows and requires to hide
 zss_editor.updateScrollOffset = false;
 
+zss_editor.clearsFormatOnPaste = false;
+
 /**
  * The initializer function that must be called onLoad
  */
@@ -43,6 +45,7 @@ zss_editor.init = function() {
 
     editor.addEventListener('input', zss_editor.onInput, false);
     editor.addEventListener('focus', zss_editor.onFocus, false);
+    editor.addEventListener('paste', zss_editor.onPaste, false);
 
     $('#zss_editor_content').on('touchend', function(e) {
         zss_editor.enabledEditingItems(e);
@@ -115,6 +118,14 @@ zss_editor.onInput = function(msg) {
 
 zss_editor.onFocus = function(msg) {
     onFocus(msg);
+}
+
+zss_editor.onPaste = function(event) {
+    if (zss_editor.clearsFormatOnPaste) {
+        event.preventDefault();
+        var text = event.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+    }
 }
 
 zss_editor.notifyContentHeightChangeIfNeeded = function() {
