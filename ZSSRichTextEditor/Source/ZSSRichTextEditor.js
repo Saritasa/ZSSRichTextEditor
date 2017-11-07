@@ -123,8 +123,8 @@ zss_editor.onFocus = function(msg) {
 zss_editor.onPaste = function(event) {
     if (zss_editor.clearsFormatOnPaste) {
         event.preventDefault();
-        var text = event.clipboardData.getData('text/plain');
-        document.execCommand('insertText', false, text);
+        var text = event.clipboardData.getData('text/plain').replace(/[\n\r]/g, '<br>');
+        document.execCommand('insertHTML', false, text);
     }
 }
 
