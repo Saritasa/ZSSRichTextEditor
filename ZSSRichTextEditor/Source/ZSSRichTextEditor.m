@@ -45,9 +45,6 @@
  */
 @property (nonatomic, strong) NSString *customCSS;
 
-/*
- *  BOOL for if the editor is loaded or not
- */
 @property (nonatomic) BOOL editorLoaded;
 
 @property (nonatomic) NSArray *highlightedBarButtonLabels;
@@ -199,6 +196,16 @@
 - (BOOL)scrollEnabled
 {
     return self.editorView.scrollView.isScrollEnabled;
+}
+
+- (CGSize)contentSize
+{
+    return self.editorView.scrollView.contentSize;
+}
+    
+- (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated
+{
+    [self.editorView.scrollView scrollRectToVisible:rect animated:animated];
 }
 
 - (BOOL)isFocused

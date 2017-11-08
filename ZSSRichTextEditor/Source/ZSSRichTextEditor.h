@@ -59,6 +59,11 @@ didChangeCaretYPostion:(CGFloat)caretYPosition
  */
 @property (nonatomic) BOOL scrollEnabled;
 
+/*
+ *  Shows whether the editor is fully loaded and ready to accept events.
+ */
+@property (nonatomic, readonly) BOOL editorLoaded;
+
 /**
  Shows whether editing enabled or not.
  */
@@ -83,6 +88,11 @@ didChangeCaretYPostion:(CGFloat)caretYPosition
  *  Color to tint selected items
  */
 @property (nonatomic, strong, nonnull) UIColor *toolbarItemSelectedTintColor;
+
+/**
+ Content size of the inner scroll view.
+ */
+@property (nonatomic, readonly) CGSize contentSize;
 
 /**
  Parent view controller to present additional controllers.
@@ -131,6 +141,11 @@ didChangeCaretYPostion:(CGFloat)caretYPosition
  *  Manually dismisses on the text editor
  */
 - (void)blurTextEditor;
+
+/**
+ Scrolls internal scroll view to a provided rect.
+ */
+- (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated;
 
 /**
  *  Shows the insert link dialog with optional inputs
