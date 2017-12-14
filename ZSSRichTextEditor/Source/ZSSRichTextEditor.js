@@ -75,6 +75,16 @@ zss_editor.init = function() {
     $(window).on('touchstart', function(e) {
         zss_editor.isDragging = false;
     });
+    $(window).on('touchend', function(e) {
+        if (zss_editor.isDragging) {
+            zss_editor.isDragging = false;
+        } else {
+            if (zss_editor.isContentEditable) {
+                e.preventDefault();
+                zss_editor.focusEditor();
+            }
+        }
+    });
 
     // Observe resizing.
     window.addEventListener('resize', resizeThrottler, false);
