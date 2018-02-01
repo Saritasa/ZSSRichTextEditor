@@ -81,6 +81,10 @@ zss_editor.init = function() {
         }
     });
 
+    $('#zss_editor_bottom').on('touchstart', function(e) {
+         e.preventDefault();
+    });
+
     // Observe resizing.
     window.addEventListener('resize', resizeThrottler, false);
     var resizeTimeout;
