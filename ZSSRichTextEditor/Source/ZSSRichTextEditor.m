@@ -111,30 +111,30 @@
 #pragma mark - Resources Section
 
 - (void)loadResources {
-    
+
     //Define correct bundle for loading resources
     NSBundle* bundle = [NSBundle bundleForClass:[ZSSRichTextEditor class]];
-    
+
     //Create a string with the contents of editor.html
     NSString *filePath = [bundle pathForResource:@"editor" ofType:@"html"];
     NSData *htmlData = [NSData dataWithContentsOfFile:filePath];
     NSString *htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
-    
+
     //Add jQuery.js to the html file
     NSString *jquery = [bundle pathForResource:@"jQuery" ofType:@"js"];
     NSString *jqueryString = [[NSString alloc] initWithData:[NSData dataWithContentsOfFile:jquery] encoding:NSUTF8StringEncoding];
     htmlString = [htmlString stringByReplacingOccurrencesOfString:@"<!-- jQuery -->" withString:jqueryString];
-    
+
     //Add JSBeautifier.js to the html file
     NSString *beautifier = [bundle pathForResource:@"JSBeautifier" ofType:@"js"];
     NSString *beautifierString = [[NSString alloc] initWithData:[NSData dataWithContentsOfFile:beautifier] encoding:NSUTF8StringEncoding];
     htmlString = [htmlString stringByReplacingOccurrencesOfString:@"<!-- jsbeautifier -->" withString:beautifierString];
-    
+
     //Add ZSSRichTextEditor.js to the html file
     NSString *source = [bundle pathForResource:@"ZSSRichTextEditor" ofType:@"js"];
     NSString *jsString = [[NSString alloc] initWithData:[NSData dataWithContentsOfFile:source] encoding:NSUTF8StringEncoding];
     htmlString = [htmlString stringByReplacingOccurrencesOfString:@"<!--editor-->" withString:jsString];
-    
+
     [self.editorView loadHTMLString:htmlString baseURL:self.baseURL];
 }
 
@@ -155,35 +155,35 @@
 #pragma mark - Editor Modification Section
 
 - (void)setCSS:(NSString *)css {
-    
+
     self.customCSS = css;
-    
+
     if (self.editorLoaded) {
         [self updateCSS];
     }
 }
 
 - (void)updateCSS {
-    
+
     if (self.customCSS != NULL && [self.customCSS length] != 0) {
-        
+
         NSString *js = [NSString stringWithFormat:@"zss_editor.setCustomCSS(\"%@\");", self.customCSS];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
-        
+
     }
-    
+
 }
 
 - (void)setPlaceholderText {
-    
+
     //Call the setPlaceholder javascript method if a placeholder has been set
     if (self.placeholder != NULL && [self.placeholder length] != 0) {
-    
+
         NSString *js = [NSString stringWithFormat:@"zss_editor.setPlaceholder(\"%@\");", self.placeholder];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
-        
+
     }
-    
+
 }
 
 #pragma mark - Editor Interaction
@@ -202,7 +202,7 @@
 {
     return self.editorView.scrollView.contentSize;
 }
-    
+
 - (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated
 {
     [self.editorView.scrollView scrollRectToVisible:rect animated:animated];
@@ -247,45 +247,45 @@
 }
 
 - (void)setHTML:(NSString *)html {
-    
+
     self.internalHTML = html;
-    
+
     if (self.editorLoaded) {
         [self updateHTML];
     }
 }
 
 - (void)updateHTML {
-    
+
     NSString *html = self.internalHTML;
     NSString *cleanedHTML = [self removeQuotesFromHTML:html];
     NSString *trigger = [NSString stringWithFormat:@"zss_editor.setHTML(\"%@\");", cleanedHTML];
     [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-    
+
 }
 
 - (NSString *)getHTML {
-    
+
     NSString *html = [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.getHTML();"];
     html = [self removeQuotesFromHTML:html];
     html = [self tidyHTML:html];
     return html;
-    
+
 }
 
 
 - (void)insertHTML:(NSString *)html {
-    
+
     NSString *cleanedHTML = [self removeQuotesFromHTML:html];
     NSString *trigger = [NSString stringWithFormat:@"zss_editor.insertHTML(\"%@\");", cleanedHTML];
     [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-    
+
 }
 
 - (NSString *)getText {
-    
+
     return [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.getText();"];
-    
+
 }
 
 - (void)dismissKeyboard {
@@ -298,10 +298,10 @@
 }
 
 - (void)textColor {
-    
+
     // Save the selection location
     [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.prepareInsert();"];
-    
+
     // Call the picker
     HRColorPickerViewController *colorPicker = [HRColorPickerViewController cancelableFullColorPickerViewControllerWithColor:[UIColor whiteColor]];
     colorPicker.delegate = self;
@@ -311,7 +311,7 @@
 }
 
 - (void)setSelectedColor:(UIColor*)color tag:(int)tag {
-    
+
     NSString *hex = [NSString stringWithFormat:@"#%06x",HexColorFromUIColor(color)];
     NSString *trigger;
     if (tag == 1) {
@@ -323,16 +323,16 @@
 }
 
 - (void)showInsertLinkDialogWithLink:(NSString *)url title:(NSString *)title {
-    
+
     // Insert Button Title
     NSString *insertButtonTitle = !self.selectedLinkURL ? NSLocalizedString(@"Insert", nil) : NSLocalizedString(@"Update", nil);
-    
+
     // Picker Button
     UIButton *am = [UIButton buttonWithType:UIButtonTypeCustom];
     am.frame = CGRectMake(0, 0, 25, 25);
     [am setImage:[UIImage imageNamed:@"ZSSpicker.png" inBundle:[NSBundle bundleForClass:[ZSSRichTextEditor class]] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
     [am addTarget:self action:@selector(showInsertURLAlternatePicker) forControlEvents:UIControlEventTouchUpInside];
-    
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Insert Link", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = NSLocalizedString(@"URL (required)", nil);
@@ -380,10 +380,10 @@
 }
 
 - (void)updateToolBarWithButtonName:(NSString *)name {
-    
+
     // Items that are enabled
     NSArray *itemNames = [name componentsSeparatedByString:@","];
-    
+
     // Special case for link
     NSMutableArray *itemsModified = [[NSMutableArray alloc] init];
     for (NSString *linkItem in itemNames) {
@@ -408,8 +408,8 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    
-    
+
+
     NSString *urlString = [[request URL] absoluteString];
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         BOOL shouldInteract = NO;
@@ -418,18 +418,22 @@
         }
         return NO;
     } else if ([urlString rangeOfString:@"callback://0/"].location != NSNotFound) {
-        
+
         // We recieved the callback
         NSString *className = [urlString stringByReplacingOccurrencesOfString:@"callback://0/" withString:@""];
         [self updateToolBarWithButtonName:className];
-        
+
     } else if ([urlString rangeOfString:@"scroll://"].location != NSNotFound) {
         NSInteger position = [[urlString stringByReplacingOccurrencesOfString:@"scroll://" withString:@""] integerValue];
         if ([self.delegate respondsToSelector:@selector(richTextEditor:didScrollToPosition:)]) {
             [self.delegate richTextEditor:self didScrollToPosition:position];
         }
     }
-    
+
+    if ([urlString rangeOfString:@"zss-callback/"].location != NSNotFound) {
+        return NO;
+    }
+
     return YES;
 }
 
@@ -517,38 +521,38 @@
 #pragma mark - Mention & Hashtag Support Section
 
 - (void)checkForMentionOrHashtagInText:(NSString *)text {
-    
+
     if ([text containsString:@" "] && [text length] > 0) {
-        
+
         NSString *lastWord = nil;
         NSString *matchedWord = nil;
         BOOL containsHashtag = NO;
         BOOL containsMention = NO;
-        
+
         NSRange range = [text rangeOfString:@" " options:NSBackwardsSearch];
         lastWord = [text substringFromIndex:range.location];
-        
+
         if (lastWord != nil) {
-        
+
             //Check if last word typed starts with a #
             NSRegularExpression *hashtagRegex = [NSRegularExpression regularExpressionWithPattern:@"#(\\w+)" options:0 error:nil];
             NSArray *hashtagMatches = [hashtagRegex matchesInString:lastWord options:0 range:NSMakeRange(0, lastWord.length)];
-            
+
             for (NSTextCheckingResult *match in hashtagMatches) {
-                
+
                 NSRange wordRange = [match rangeAtIndex:1];
                 NSString *word = [lastWord substringWithRange:wordRange];
                 matchedWord = word;
                 containsHashtag = YES;
-                
+
             }
-            
+
             if (!containsHashtag) {
-                
+
                 //Check if last word typed starts with a @
                 NSRegularExpression *mentionRegex = [NSRegularExpression regularExpressionWithPattern:@"@(\\w+)" options:0 error:nil];
                 NSArray *mentionMatches = [mentionRegex matchesInString:lastWord options:0 range:NSMakeRange(0, lastWord.length)];
-                
+
                 for (NSTextCheckingResult *match in mentionMatches) {
                     NSRange wordRange = [match rangeAtIndex:1];
                     NSString *word = [lastWord substringWithRange:wordRange];
@@ -557,13 +561,13 @@
                 }
             }
         }
-        
+
         if (containsHashtag) {
             if ([self.delegate respondsToSelector:@selector(richTextEditor:didRecognizeHashtag:)]) {
                 [self.delegate richTextEditor:self didRecognizeHashtag:matchedWord];
             }
         }
-        
+
         if (containsMention) {
             if ([self.delegate respondsToSelector:@selector(richTextEditor:didRecognizeMention:)]) {
                 [self.delegate richTextEditor:self didRecognizeMention:matchedWord];
@@ -716,21 +720,21 @@
 
 
 - (UIColor *)barButtonItemDefaultColor {
-    
+
     if (self.toolbarItemTintColor) {
         return self.toolbarItemTintColor;
     }
-    
+
     return [UIColor colorWithRed:0.0f/255.0f green:122.0f/255.0f blue:255.0f/255.0f alpha:1.0f];
 }
 
 
 - (UIColor *)barButtonItemSelectedDefaultColor {
-    
+
     if (self.toolbarItemSelectedTintColor) {
         return self.toolbarItemSelectedTintColor;
     }
-    
+
     return [UIColor blackColor];
 }
 

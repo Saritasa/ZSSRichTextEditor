@@ -78,11 +78,12 @@ zss_editor.init = function() {
     $(window).on('touchend', function(e) {
         if (zss_editor.isDragging) {
             zss_editor.isDragging = false;
+        } else {
+            if (zss_editor.isContentEditable) {
+                e.preventDefault();
+                zss_editor.focusEditor();
+            }
         }
-    });
-
-    $('#zss_editor_bottom').on('touchstart', function(e) {
-         e.preventDefault();
     });
 
     // Observe resizing.
