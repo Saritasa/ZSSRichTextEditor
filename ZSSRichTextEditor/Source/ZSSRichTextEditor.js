@@ -36,16 +36,18 @@ zss_editor.updateScrollOffset = false;
 
 zss_editor.clearsFormatOnPaste = false;
 
+function editor() {
+    return document.getElementById('zss_editor_content');
+}
+
 /**
  * The initializer function that must be called onLoad
  */
 zss_editor.init = function() {
 
-    var editor = document.getElementById('zss_editor_content');
-
-    editor.addEventListener('input', zss_editor.onInput, false);
-    editor.addEventListener('focus', zss_editor.onFocus, false);
-    editor.addEventListener('paste', zss_editor.onPaste, false);
+    editor().addEventListener('input', zss_editor.onInput, false);
+    editor().addEventListener('focus', zss_editor.onFocus, false);
+    editor().addEventListener('paste', zss_editor.onPaste, false);
 
     $('#zss_editor_content').on('touchend', function(e) {
         zss_editor.enabledEditingItems(e);
@@ -78,11 +80,6 @@ zss_editor.init = function() {
     $(window).on('touchend', function(e) {
         if (zss_editor.isDragging) {
             zss_editor.isDragging = false;
-        } else {
-            if (zss_editor.isContentEditable) {
-                e.preventDefault();
-                zss_editor.focusEditor();
-            }
         }
     });
 
@@ -744,21 +741,31 @@ zss_editor.enabledEditingItems = function(e) {
 }
 
 zss_editor.focusEditor = function() {
-
-    // the following was taken from http://stackoverflow.com/questions/1125292/how-to-move-cursor-to-end-of-contenteditable-entity/3866442#3866442
-    // and ensures we move the cursor to the end of the editor
-    var editor = $('#zss_editor_content');
+    if (!zss_editor.isContentEditable()) {
+        return;
+    }
     var range = document.createRange();
-    range.selectNodeContents(editor.get(0));
+    range.selectNodeContents(editor());
     range.collapse(false);
     var selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    editor.get(0).focus();
-}
+    editor().focus();
+};
+
+zss_editor.focusAtPoint = function(x, y) {
+    if (!zss_editor.isContentEditable()) {
+        return;
+    }
+    var range = document.caretRangeFromPoint(x, y) || document.createRange();
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    editor().focus();
+};
 
 zss_editor.blurEditor = function() {
-    $('#zss_editor_content').blur();
+    editor().blur();
 }
 
 zss_editor.setCustomCSS = function(customCSS) {
@@ -766,11 +773,9 @@ zss_editor.setCustomCSS = function(customCSS) {
 }
 
 zss_editor.setContentEditable = function(editable) {
-    var editor = document.getElementById('zss_editor_content');
-    editor.contentEditable = editable;
+    editor().contentEditable = editable;
 }
 
 zss_editor.isContentEditable = function() {
-    var editor = document.getElementById('zss_editor_content');
-    return editor.contentEditable == 'true'
+    return editor().contentEditable == 'true';
 }

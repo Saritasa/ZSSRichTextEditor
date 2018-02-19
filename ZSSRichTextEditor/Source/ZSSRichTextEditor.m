@@ -208,12 +208,6 @@
     [self.editorView.scrollView scrollRectToVisible:rect animated:animated];
 }
 
-- (BOOL)isFocused
-{
-    // TODO: we probably should implement all methods related to UIResponder, but for now this does the job.
-    return [ZSSRichTextEditor viewContainsFirstResponder:self.editorView];
-}
-
 - (void)setEditingEnabled:(BOOL)editingEnabled
 {
     _editingEnabled = editingEnabled;
@@ -231,6 +225,11 @@
         NSString *js = [NSString stringWithFormat:@"zss_editor.clearsFormatOnPaste = %@;", clearsFormatOnPaste ? @"true" : @"false"];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
     }
+}
+
+- (BOOL)isFocused
+{
+    return [ZSSRichTextEditor viewContainsFirstResponder:self.editorView];
 }
 
 - (void)focusTextEditor {
