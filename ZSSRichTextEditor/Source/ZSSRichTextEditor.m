@@ -480,7 +480,7 @@
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeCaretYPostion:lineHeight:)]) {
                     CGFloat y = ceil([[msg1 toObject] floatValue]);
-                    CGFloat h = ceil([[msg2 toObject] floatValue]);
+                    CGFloat h = ceil([[msg2 toObject] floatValue] * 1.2); // Increase the height of the cursor.
                     [strongSelf.delegate richTextEditor:self didChangeCaretYPostion:y lineHeight:h];
                 }
             }
