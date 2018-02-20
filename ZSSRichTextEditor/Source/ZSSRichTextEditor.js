@@ -182,15 +182,13 @@ zss_editor.setFooterHeight = function(footerHeight) {
 
 zss_editor.getCaretYPosition = function() {
     var sel = window.getSelection();
-    // Next line is comented to prevent deselecting selection. It looks like work but if there are any issues will appear then uconmment it as well as code above.
-    //sel.collapseToStart();
     if (sel.rangeCount > 0) {
         var range = sel.getRangeAt(0);
-        var span = document.createElement('span'); // something happening here preventing selection of elements
+        var div = document.createElement('div');
         range.collapse(false);
-        range.insertNode(span);
-        var topPosition = span.offsetTop;
-        span.parentNode.removeChild(span);
+        range.insertNode(div);
+        var topPosition = div.offsetTop;
+        div.parentNode.removeChild(div);
         return topPosition;
     } else {
         return 0;
@@ -203,29 +201,13 @@ zss_editor.isCaretYPositionAvaialable = function() {
 
 zss_editor.calculateEditorHeightWithCaretPosition = function() {
     if (zss_editor.isCaretYPositionAvaialable()) {
-        var c = zss_editor.getCaretYPosition();
-
-        var offsetY = window.document.body.scrollTop;
-        var height = Math.max(window.innerHeight, document.documentElement.clientHeight);
-        var lineHeight = zss_editor.getLineHeight();
-
-        var newPos = window.pageYOffset;
-
-        if (c < offsetY) {
-            newPos = c;
-        } else if (c + lineHeight > (offsetY + height)) {
-            newPos = c - height + lineHeight;
-        }
-
-        // Always scroll to a new position. Prevents issues when cursor sometimes is under toolbar.
-        window.scrollTo(0, newPos);
-
-        if (c == zss_editor.caretYPosition) {
+        var y = zss_editor.getCaretYPosition();
+        if (y == zss_editor.caretYPosition) {
             return;
         }
-        zss_editor.caretYPosition = c;
+        zss_editor.caretYPosition = y;
 
-        onCaretYPositionChange(c, lineHeight);
+        onCaretYPositionChange(y, zss_editor.getLineHeight());
     }
 }
 
