@@ -40,6 +40,8 @@ function editor() {
     return document.getElementById('zss_editor_content');
 }
 
+function editorLog(message) {}
+
 /**
  * The initializer function that must be called onLoad
  */

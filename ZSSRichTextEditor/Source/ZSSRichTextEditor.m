@@ -487,6 +487,14 @@
         }];
     };
 
+    ctx[@"editorLog"] = ^(JSValue *message) {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            if (weakSelf) {
+                NSLog(@"Editor: %@", [message toObject]);
+            }
+        }];
+    };
+
     if (!self.internalHTML) {
         self.internalHTML = @"";
     }
