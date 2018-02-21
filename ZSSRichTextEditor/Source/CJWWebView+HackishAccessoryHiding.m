@@ -20,7 +20,7 @@ static Class hackishFixClass = Nil;
 - (void)setCjw_inputAccessoryView:(UIView *)view {
     objc_setAssociatedObject(self, @selector(cjw_inputAccessoryView), view, OBJC_ASSOCIATION_RETAIN);
 
-    UIView *browserView = [self hackishlyFoundBrowserView];
+    UIView *browserView = [self cjw_hackishlyFoundBrowserView];
     if (browserView == nil) {
         return;
     }
@@ -35,7 +35,7 @@ static Class hackishFixClass = Nil;
     [browserView reloadInputViews];
 }
 
-- (UIView *)hackishlyFoundBrowserView {
+- (UIView *)cjw_hackishlyFoundBrowserView {
     UIScrollView *scrollView = self.scrollView;
     
     UIView *browserView = nil;

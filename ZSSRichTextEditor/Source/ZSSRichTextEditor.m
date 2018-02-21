@@ -16,7 +16,7 @@
 
 @import JavaScriptCore;
 
-@interface ZSSRichTextEditor () <UIWebViewDelegate, UIScrollViewDelegate, HRColorPickerViewControllerDelegate>
+@interface ZSSRichTextEditor () <UIWebViewDelegate, UIScrollViewDelegate, HRColorPickerViewControllerDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic) ZSSToolbarView *toolbarView;
 
@@ -87,6 +87,11 @@
     self.editorView.dataDetectorTypes = UIDataDetectorTypeNone;
     self.editorView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.editorView];
+
+    UIView *view = [self.editorView cjw_hackishlyFoundBrowserView];
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
+    recognizer.delegate = self;
+    [view addGestureRecognizer:recognizer];
 
     [self loadResources];
 }
@@ -188,6 +193,15 @@
 
 #pragma mark - Editor Interaction
 
+- (void)tapGestureAction:(UITapGestureRecognizer *)recognizer
+{
+    if (self.isFocused) {
+        [self handleFreeTapAtPoint:[recognizer locationInView:recognizer.view]];
+    } else {
+        [self focusTextEditor];
+    }
+}
+
 - (void)setScrollEnabled:(BOOL)scrollEnabled
 {
     self.editorView.scrollView.scrollEnabled = scrollEnabled;
@@ -232,10 +246,19 @@
     return [ZSSRichTextEditor viewContainsFirstResponder:self.editorView];
 }
 
-- (void)focusTextEditor {
+- (void)focusTextEditor
+{
     if (self.editingEnabled) {
         self.editorView.keyboardDisplayRequiresUserAction = NO;
         NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
+        [self.editorView stringByEvaluatingJavaScriptFromString:js];
+    }
+}
+
+- (void)handleFreeTapAtPoint:(CGPoint)point
+{
+    if (self.editingEnabled) {
+        NSString *js = [NSString stringWithFormat:@"zss_editor.handleFreeTap(%@, %@);", @(point.x), @(point.y)];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
     }
 }
@@ -403,12 +426,18 @@
     [self updateHighlightForBarButtonItems];
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    // Allow other recognizers to work simultaneously with our.
+    return YES;
+}
+
 #pragma mark - UIWebView Delegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-
-
     NSString *urlString = [[request URL] absoluteString];
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         BOOL shouldInteract = NO;
