@@ -441,6 +441,12 @@
         NSString *className = [urlString stringByReplacingOccurrencesOfString:@"callback://0/" withString:@""];
         [self updateToolBarWithButtonName:className];
 
+        // There could be some changes after this callback and we need to make sure that
+        // we notify about them our delegate.
+        if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+            [self.delegate richTextEditor:self didChangeText:[self getText] html:[self getHTML]];
+        }
+
     } else if ([urlString rangeOfString:@"scroll://"].location != NSNotFound) {
         NSInteger position = [[urlString stringByReplacingOccurrencesOfString:@"scroll://" withString:@""] integerValue];
         if ([self.delegate respondsToSelector:@selector(richTextEditor:didScrollToPosition:)]) {
