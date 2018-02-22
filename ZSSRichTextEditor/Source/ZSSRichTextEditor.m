@@ -195,9 +195,7 @@
 
 - (void)tapGestureAction:(UITapGestureRecognizer *)recognizer
 {
-    if (self.isFocused) {
-        [self handleFreeTapAtPoint:[recognizer locationInView:recognizer.view]];
-    } else {
+    if (!self.isFocused) {
         [self focusTextEditor];
     }
 }
@@ -251,14 +249,6 @@
     if (self.editingEnabled) {
         self.editorView.keyboardDisplayRequiresUserAction = NO;
         NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
-        [self.editorView stringByEvaluatingJavaScriptFromString:js];
-    }
-}
-
-- (void)handleFreeTapAtPoint:(CGPoint)point
-{
-    if (self.editingEnabled) {
-        NSString *js = [NSString stringWithFormat:@"zss_editor.handleFreeTap(%@, %@);", @(point.x), @(point.y)];
         [self.editorView stringByEvaluatingJavaScriptFromString:js];
     }
 }

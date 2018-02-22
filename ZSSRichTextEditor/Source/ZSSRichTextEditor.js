@@ -725,6 +725,7 @@ zss_editor.enabledEditingItems = function(e) {
 }
 
 zss_editor.focusEditor = function() {
+    editorLog("FOCUS");
     if (!zss_editor.isContentEditable()) {
         return;
     }
@@ -736,22 +737,6 @@ zss_editor.focusEditor = function() {
     selection.addRange(range);
     editor().focus();
 };
-
-// Handle a free tap, if the tap is outside of the content - reset selection and
-// move caret to the end.
-zss_editor.handleFreeTap = function(x, y) {
-    if (!zss_editor.isContentEditable()) {
-        return;
-    }
-    if (document.caretRangeFromPoint(x, y) == null) {
-        var range = document.createRange();
-        range.selectNodeContents(editor());
-        range.collapse(false);
-        var selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
-}
 
 zss_editor.blurEditor = function() {
     editor().blur();
