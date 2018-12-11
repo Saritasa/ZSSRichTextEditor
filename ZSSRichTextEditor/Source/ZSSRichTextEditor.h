@@ -113,18 +113,6 @@ didChangeCaretYPostion:(CGFloat)caretYPosition
 - (void)setHTML:(nullable NSString *)html;
 
 /**
- *  Returns the HTML from the Rich Text Editor
- *
- */
-- (nullable NSString *)getHTML;
-
-/**
- *  Returns the plain text from the Rich Text Editor
- *
- */
-- (nullable NSString *)getText;
-
-/**
  *  Inserts HTML at the caret position
  *
  *  @param html  HTML string to insert

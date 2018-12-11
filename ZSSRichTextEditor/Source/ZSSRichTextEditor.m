@@ -13,17 +13,18 @@
 #import "ZSSBarButtonItem.h"
 #import "HRColorUtil.h"
 #import "CJWWebView+HackishAccessoryHiding.h"
+#import <WebKit/WebKit.h>
 
 @import JavaScriptCore;
 
-@interface ZSSRichTextEditor () <UIWebViewDelegate, UIScrollViewDelegate, HRColorPickerViewControllerDelegate, UIGestureRecognizerDelegate>
+@interface ZSSRichTextEditor () <WKNavigationDelegate, UIScrollViewDelegate, HRColorPickerViewControllerDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic) ZSSToolbarView *toolbarView;
 
 /*
  *  UIWebView for writing/editing/displaying the content
  */
-@property (nonatomic, strong) UIWebView *editorView;
+@property (nonatomic, strong) WKWebView *editorView;
 
 /*
  *  NSString holding the selected links URL value
@@ -79,12 +80,13 @@
     self.formatHTML = NO;
     self.editingEnabled = YES;
 
-    self.editorView = [[UIWebView alloc] initWithFrame:CGRectZero];
-    self.editorView.delegate = self;
+    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+    configuration.dataDetectorTypes = WKDataDetectorTypeNone;
+    self.editorView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:configuration];
+    self.editorView.navigationDelegate = self;
     self.editorView.scrollView.delegate = self;
     self.editorView.opaque = NO;
-    self.editorView.scalesPageToFit = YES;
-    self.editorView.dataDetectorTypes = UIDataDetectorTypeNone;
+
     self.editorView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.editorView];
 
@@ -111,6 +113,15 @@
 - (UIColor *)backgroundColor
 {
     return [super backgroundColor];
+}
+
+- (void)evaluateJavaScript:(NSString *)js
+{
+    [self.editorView evaluateJavaScript:js completionHandler:^(id _Nullable object, NSError * _Nullable error) {
+        if (error != nil) {
+            NSLog(@"ZSSRichTextEditor Error: %@", error.localizedDescription);
+        }
+    }];
 }
 
 #pragma mark - Resources Section
@@ -173,10 +184,8 @@
     if (self.customCSS != NULL && [self.customCSS length] != 0) {
 
         NSString *js = [NSString stringWithFormat:@"zss_editor.setCustomCSS(\"%@\");", self.customCSS];
-        [self.editorView stringByEvaluatingJavaScriptFromString:js];
-
+        [self evaluateJavaScript:js];
     }
-
 }
 
 - (void)setPlaceholderText {
@@ -185,10 +194,8 @@
     if (self.placeholder != NULL && [self.placeholder length] != 0) {
 
         NSString *js = [NSString stringWithFormat:@"zss_editor.setPlaceholder(\"%@\");", self.placeholder];
-        [self.editorView stringByEvaluatingJavaScriptFromString:js];
-
+        [self evaluateJavaScript:js];
     }
-
 }
 
 #pragma mark - Editor Interaction
@@ -226,7 +233,7 @@
     self.editorView.cjw_inputAccessoryView = editingEnabled ? self.toolbarView : nil;
     if (self.editorLoaded) {
         NSString *js = [NSString stringWithFormat:@"zss_editor.setContentEditable(%@);", editingEnabled ? @"true" : @"false"];
-        [self.editorView stringByEvaluatingJavaScriptFromString:js];
+        [self evaluateJavaScript:js];
     }
 }
 
@@ -235,7 +242,7 @@
     _clearsFormatOnPaste = clearsFormatOnPaste;
     if (self.editorLoaded) {
         NSString *js = [NSString stringWithFormat:@"zss_editor.clearsFormatOnPaste = %@;", clearsFormatOnPaste ? @"true" : @"false"];
-        [self.editorView stringByEvaluatingJavaScriptFromString:js];
+        [self evaluateJavaScript:js];
     }
 }
 
@@ -247,15 +254,14 @@
 - (void)focusTextEditor
 {
     if (self.editingEnabled) {
-        self.editorView.keyboardDisplayRequiresUserAction = NO;
         NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
-        [self.editorView stringByEvaluatingJavaScriptFromString:js];
+        [self evaluateJavaScript:js];
     }
 }
 
 - (void)blurTextEditor {
     NSString *js = [NSString stringWithFormat:@"zss_editor.blurEditor();"];
-    [self.editorView stringByEvaluatingJavaScriptFromString:js];
+    [self evaluateJavaScript:js];
 }
 
 - (void)setHTML:(NSString *)html {
@@ -272,32 +278,29 @@
     NSString *html = self.internalHTML;
     NSString *cleanedHTML = [self removeQuotesFromHTML:html];
     NSString *trigger = [NSString stringWithFormat:@"zss_editor.setHTML(\"%@\");", cleanedHTML];
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
-
+    [self evaluateJavaScript:trigger];
 }
-
-- (NSString *)getHTML {
-
-    NSString *html = [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.getHTML();"];
-    html = [self removeQuotesFromHTML:html];
-    html = [self tidyHTML:html];
-    return html;
-
-}
-
 
 - (void)insertHTML:(NSString *)html {
 
     NSString *cleanedHTML = [self removeQuotesFromHTML:html];
     NSString *trigger = [NSString stringWithFormat:@"zss_editor.insertHTML(\"%@\");", cleanedHTML];
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+    [self evaluateJavaScript:trigger];
 
 }
 
-- (NSString *)getText {
-
-    return [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.getText();"];
-
+- (void)getHTMLAndTextWithCompletionHandler:(void (^)(NSString *html, NSString *text))completion
+{
+    [self.editorView evaluateJavaScript:@"zss_editor.getHTML();" completionHandler:^(id _Nullable object, NSError * _Nullable error) {
+        NSString *html = object;
+        html = [self removeQuotesFromHTML:html];
+        [self tidyHTML:html completionHandler:^(NSString *html) {
+            [self.editorView evaluateJavaScript:@"zss_editor.getText();" completionHandler:^(id _Nullable object, NSError * _Nullable error) {
+                NSString *text = object;
+                completion(html, text);
+            }];
+        }];
+    }];
 }
 
 - (void)dismissKeyboard {
@@ -306,13 +309,13 @@
 
 - (void)setHeading:(NSString *)heading {
     NSString *trigger = [NSString stringWithFormat:@"zss_editor.setHeading('%@');", heading];
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+    [self evaluateJavaScript:trigger];
 }
 
 - (void)textColor {
 
     // Save the selection location
-    [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.prepareInsert();"];
+    [self evaluateJavaScript:@"zss_editor.prepareInsert();"];
 
     // Call the picker
     HRColorPickerViewController *colorPicker = [HRColorPickerViewController cancelableFullColorPickerViewControllerWithColor:[UIColor whiteColor]];
@@ -331,7 +334,7 @@
     } else if (tag == 2) {
         trigger = [NSString stringWithFormat:@"zss_editor.setBackgroundColor(\"%@\");", hex];
     }
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+    [self evaluateJavaScript:trigger];
 }
 
 - (void)showInsertLinkDialogWithLink:(NSString *)url title:(NSString *)title {
@@ -383,12 +386,12 @@
 
 - (void)insertLink:(NSString *)url title:(NSString *)title {
     NSString *trigger = [NSString stringWithFormat:@"zss_editor.insertLink(\"%@\", \"%@\");", url, title];
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+    [self evaluateJavaScript:trigger];
 }
 
 - (void)updateLink:(NSString *)url title:(NSString *)title {
     NSString *trigger = [NSString stringWithFormat:@"zss_editor.updateLink(\"%@\", \"%@\");", url, title];
-    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+    [self evaluateJavaScript:trigger];
 }
 
 - (void)updateToolBarWithButtonName:(NSString *)name {
@@ -424,18 +427,25 @@
     return YES;
 }
 
-#pragma mark - UIWebView Delegate
+#pragma mark - WKNavigationDelegate
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    NSString *urlString = [[request URL] absoluteString];
-    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
         BOOL shouldInteract = NO;
         if ([self.delegate respondsToSelector:@selector(richTextEditor:shouldInteractWithURL:)]) {
-            shouldInteract = [self.delegate richTextEditor:self shouldInteractWithURL:[request URL]];
+            shouldInteract = [self.delegate richTextEditor:self shouldInteractWithURL:navigationAction.request.URL];
         }
-        return NO;
-    } else if ([urlString rangeOfString:@"callback://0/"].location != NSNotFound) {
+        if (shouldInteract) {
+            decisionHandler(WKNavigationActionPolicyCancel);
+        } else {
+            decisionHandler(WKNavigationActionPolicyAllow);
+        }
+        return;
+    }
+
+    NSString *urlString = navigationAction.request.URL.absoluteString;
+    if ([urlString rangeOfString:@"callback://0/"].location != NSNotFound) {
 
         // We recieved the callback
         NSString *className = [urlString stringByReplacingOccurrencesOfString:@"callback://0/" withString:@""];
@@ -444,24 +454,33 @@
         // There could be some changes after this callback and we need to make sure that
         // we notify about them our delegate.
         if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
-            [self.delegate richTextEditor:self didChangeText:[self getText] html:[self getHTML]];
+            [self getHTMLAndTextWithCompletionHandler:^(NSString *html, NSString *text) {
+                [self.delegate richTextEditor:self didChangeText:text html:html];
+            }];
         }
+        decisionHandler(WKNavigationActionPolicyAllow);
+        return;
+    }
 
-    } else if ([urlString rangeOfString:@"scroll://"].location != NSNotFound) {
+    if ([urlString rangeOfString:@"scroll://"].location != NSNotFound) {
         NSInteger position = [[urlString stringByReplacingOccurrencesOfString:@"scroll://" withString:@""] integerValue];
         if ([self.delegate respondsToSelector:@selector(richTextEditor:didScrollToPosition:)]) {
             [self.delegate richTextEditor:self didScrollToPosition:position];
         }
+        decisionHandler(WKNavigationActionPolicyAllow);
+        return;
     }
 
     if ([urlString rangeOfString:@"zss-callback/"].location != NSNotFound) {
-        return NO;
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
     }
 
-    return YES;
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
+{
     self.editorLoaded = YES;
 
     __weak typeof(self) weakSelf = self;
@@ -470,10 +489,12 @@
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if (weakSelf) {
                 __strong typeof(weakSelf) strongSelf = weakSelf;
-                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
-                    [strongSelf.delegate richTextEditor:strongSelf didChangeText:[strongSelf getText] html:[strongSelf getHTML]];
-                }
-                [strongSelf checkForMentionOrHashtagInText:[strongSelf getText]];
+                [self getHTMLAndTextWithCompletionHandler:^(NSString *html, NSString *text) {
+                    if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+                        [strongSelf.delegate richTextEditor:strongSelf didChangeText:text html:html];
+                    }
+                    [strongSelf checkForMentionOrHashtagInText:text];
+                }];
             }
         }];
     };
@@ -612,37 +633,37 @@
 {
     switch (sender.itemType) {
         case ZSSBarButtonItemTypeBold:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setBold();"];
+            [self evaluateJavaScript:@"zss_editor.setBold();"];
             break;
         case ZSSBarButtonItemTypeItalic:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setItalic();"];
+            [self evaluateJavaScript:@"zss_editor.setItalic();"];
             break;
         case ZSSBarButtonItemTypeSubscript:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setSubscript();"];
+            [self evaluateJavaScript:@"zss_editor.setSubscript();"];
             break;
         case ZSSBarButtonItemTypeSuperscript:
-            [self.editorView stringByEvaluatingJavaScriptFromString: @"zss_editor.setSuperscript();"];
+            [self evaluateJavaScript: @"zss_editor.setSuperscript();"];
             break;
         case ZSSBarButtonItemTypeStrikeThrough:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setStrikeThrough();"];
+            [self evaluateJavaScript:@"zss_editor.setStrikeThrough();"];
             break;
         case ZSSBarButtonItemTypeUnderline:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setUnderline();"];
+            [self evaluateJavaScript:@"zss_editor.setUnderline();"];
             break;
         case ZSSBarButtonItemTypeRemoveFormat:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.removeFormating();"];
+            [self evaluateJavaScript:@"zss_editor.removeFormating();"];
             break;
         case ZSSBarButtonItemTypeJustifyLeft:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyLeft();"];
+            [self evaluateJavaScript:@"zss_editor.setJustifyLeft();"];
             break;
         case ZSSBarButtonItemTypeJustifyCenter:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyCenter();"];
+            [self evaluateJavaScript:@"zss_editor.setJustifyCenter();"];
             break;
         case ZSSBarButtonItemTypeJustifyRight:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyRight();"];
+            [self evaluateJavaScript:@"zss_editor.setJustifyRight();"];
             break;
         case ZSSBarButtonItemTypeJustifyFull:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setJustifyFull();"];
+            [self evaluateJavaScript:@"zss_editor.setJustifyFull();"];
             break;
         case ZSSBarButtonItemTypeH1:
         case ZSSBarButtonItemTypeH2:
@@ -656,41 +677,41 @@
             [self textColor];
             break;
         case ZSSBarButtonItemTypeUnorderedList:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setUnorderedList();"];
+            [self evaluateJavaScript:@"zss_editor.setUnorderedList();"];
             break;
         case ZSSBarButtonItemTypeOrderedList:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setOrderedList();"];
+            [self evaluateJavaScript:@"zss_editor.setOrderedList();"];
             break;
         case ZSSBarButtonItemTypeHorizontalRule:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setHorizontalRule();"];
+            [self evaluateJavaScript:@"zss_editor.setHorizontalRule();"];
             break;
         case ZSSBarButtonItemTypeIndent:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setIndent();"];
+            [self evaluateJavaScript:@"zss_editor.setIndent();"];
             break;
         case ZSSBarButtonItemTypeOutdent:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setOutdent();"];
+            [self evaluateJavaScript:@"zss_editor.setOutdent();"];
             break;
         case ZSSBarButtonItemTypeInsertLink: {
             // Save the selection location
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.prepareInsert();"];
+            [self evaluateJavaScript:@"zss_editor.prepareInsert();"];
             // Show the dialog for inserting or editing a link
             [self showInsertLinkDialogWithLink:self.selectedLinkURL title:self.selectedLinkTitle];
         }
             break;
         case ZSSBarButtonItemTypeRemoveLink:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.unlink();"];
+            [self evaluateJavaScript:@"zss_editor.unlink();"];
             break;
         case ZSSBarButtonItemTypeQuickLink:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.quickLink();"];
+            [self evaluateJavaScript:@"zss_editor.quickLink();"];
             break;
         case ZSSBarButtonItemTypeUndo:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.undo();"];
+            [self evaluateJavaScript:@"zss_editor.undo();"];
             break;
         case ZSSBarButtonItemTypeRedo:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.redo();"];
+            [self evaluateJavaScript:@"zss_editor.redo();"];
             break;
         case ZSSBarButtonItemTypeParagraph:
-            [self.editorView stringByEvaluatingJavaScriptFromString:@"zss_editor.setParagraph();"];
+            [self evaluateJavaScript:@"zss_editor.setParagraph();"];
             break;
         default:
             if ([self.delegate respondsToSelector:@selector(richTextEditor:didReceiveUnrecognizedActionLabel:)]) {
@@ -738,18 +759,25 @@
 }
 
 
-- (NSString *)tidyHTML:(NSString *)html {
+- (NSString *)tidyHTML:(NSString *)html completionHandler:(void (^)(NSString *))completion {
     // When user stats typing "Foo" then hits enter the html will be "Foo<div><br></div>".
     // We solve it by replacing div and 2 br tags.
     html = [html stringByReplacingOccurrencesOfString:@"<div>" withString:@"<br>"];
     html = [html stringByReplacingOccurrencesOfString:@"<\/div>" withString:@""];
     html = [html stringByReplacingOccurrencesOfString:@"<br><br>" withString:@"<br>"];
     if (self.formatHTML) {
-        html = [self.editorView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"style_html(\"%@\");", html]];
+        NSString *js = [NSString stringWithFormat:@"style_html(\"%@\");", html];
+        [self.editorView evaluateJavaScript:js completionHandler:^(id _Nullable object, NSError * _Nullable error) {
+            if ([object isKindOfClass:[NSString class]]) {
+                completion(object);
+            } else {
+                completion(nil);
+            }
+        }];
+    } else {
+        completion(html);
     }
-    return html;
 }
-
 
 - (UIColor *)barButtonItemDefaultColor {
 
