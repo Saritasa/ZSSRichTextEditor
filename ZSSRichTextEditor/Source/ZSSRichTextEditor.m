@@ -22,7 +22,7 @@
 @property (nonatomic) ZSSToolbarView *toolbarView;
 
 /*
- *  UIWebView for writing/editing/displaying the content
+ *  Web View for writing/editing/displaying the content
  */
 @property (nonatomic, strong) WKWebView *editorView;
 
