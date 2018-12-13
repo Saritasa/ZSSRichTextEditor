@@ -40,7 +40,13 @@ function editor() {
     return document.getElementById('zss_editor_content');
 }
 
-function editorLog(message) {}
+function editorLog(message) {
+    postPortsMessage({type: "editorLog", message: message});
+}
+
+function postPortsMessage(messageBody) {
+    window.webkit.messageHandlers.ports.postMessage(messageBody);
+}
 
 /**
  * The initializer function that must be called onLoad
@@ -122,11 +128,11 @@ zss_editor.updateOffset = function() {
 
 zss_editor.onInput = function(msg) {
     zss_editor.notifyContentHeightChangeIfNeeded();
-    onInput(msg);
+    postPortsMessage({type: "onInput"});
 }
 
 zss_editor.onFocus = function(msg) {
-    onFocus(msg);
+    postPortsMessage({type: "onFocus"});
 }
 
 zss_editor.onPaste = function(event) {
@@ -140,7 +146,7 @@ zss_editor.onPaste = function(event) {
 zss_editor.notifyContentHeightChangeIfNeeded = function() {
     var h = Math.ceil(document.body.getBoundingClientRect().bottom);
     if (h != zss_editor.contentHeight) {
-        onContentHeightChange(h);
+        postPortsMessage({type: "onContentHeightChange", value: h});
         zss_editor.contentHeight = h;
     }
 }
@@ -153,8 +159,7 @@ zss_editor.getContentHeight = function() {
 }
 
 zss_editor.setScrollPosition = function() {
-    var position = window.pageYOffset;
-    window.location = 'scroll://' + position;
+    postPortsMessage({type: "onScroll", position: window.pageYOffset});
 }
 
 zss_editor.setPlaceholder = function(placeholder) {
@@ -207,7 +212,7 @@ zss_editor.calculateEditorHeightWithCaretPosition = function() {
         }
         zss_editor.caretYPosition = y;
 
-        onCaretYPositionChange(y, zss_editor.getLineHeight());
+        postPortsMessage({type: "onCaretYPositionChange", caretY: y, caretHeight: zss_editor.getLineHeight()});
     }
 }
 
@@ -708,19 +713,10 @@ zss_editor.enabledEditingItems = function(e) {
         }
     }
 
-    if (items.length > 0) {
-        if (zss_editor.isUsingiOS) {
-            //window.location = "zss-callback/"+items.join(',');
-            window.location = "callback://0/" + items.join(',');
-        } else {
-            console.log("callback://" + items.join(','));
-        }
+    if (zss_editor.isUsingiOS) {
+        postPortsMessage({type: "onToolbarUpdate", value: items.join(',')});
     } else {
-        if (zss_editor.isUsingiOS) {
-            window.location = "zss-callback/";
-        } else {
-            console.log("callback://");
-        }
+        console.log("Toolbar Items: " + items.join(','));
     }
 }
 

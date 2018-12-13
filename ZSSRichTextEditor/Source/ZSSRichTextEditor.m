@@ -17,7 +17,7 @@
 
 @import JavaScriptCore;
 
-@interface ZSSRichTextEditor () <WKNavigationDelegate, UIScrollViewDelegate, HRColorPickerViewControllerDelegate, UIGestureRecognizerDelegate>
+@interface ZSSRichTextEditor () <WKNavigationDelegate, WKScriptMessageHandler, UIScrollViewDelegate, HRColorPickerViewControllerDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic) ZSSToolbarView *toolbarView;
 
@@ -82,6 +82,10 @@
 
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
     configuration.dataDetectorTypes = WKDataDetectorTypeNone;
+    configuration.suppressesIncrementalRendering = YES;
+    WKUserContentController *contentController = [[WKUserContentController alloc] init];
+    configuration.userContentController = contentController;
+    [contentController addScriptMessageHandler:self name:@"ports"];
     self.editorView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:configuration];
     self.editorView.navigationDelegate = self;
     self.editorView.scrollView.delegate = self;
@@ -151,7 +155,9 @@
     NSString *jsString = [[NSString alloc] initWithData:[NSData dataWithContentsOfFile:source] encoding:NSUTF8StringEncoding];
     htmlString = [htmlString stringByReplacingOccurrencesOfString:@"<!--editor-->" withString:jsString];
 
-    [self.editorView loadHTMLString:htmlString baseURL:self.baseURL];
+    NSURL *fileURL = [[[NSFileManager defaultManager] temporaryDirectory] URLByAppendingPathComponent:@"ZSSRichTextEditor.html"];
+    [htmlString writeToURL:fileURL atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    [self.editorView loadFileURL:fileURL allowingReadAccessToURL:fileURL];
 }
 
 #pragma mark - Toolbar Section
@@ -444,102 +450,12 @@
         return;
     }
 
-    NSString *urlString = navigationAction.request.URL.absoluteString;
-    if ([urlString rangeOfString:@"callback://0/"].location != NSNotFound) {
-
-        // We recieved the callback
-        NSString *className = [urlString stringByReplacingOccurrencesOfString:@"callback://0/" withString:@""];
-        [self updateToolBarWithButtonName:className];
-
-        // There could be some changes after this callback and we need to make sure that
-        // we notify about them our delegate.
-        if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
-            [self getHTMLAndTextWithCompletionHandler:^(NSString *html, NSString *text) {
-                [self.delegate richTextEditor:self didChangeText:text html:html];
-            }];
-        }
-        decisionHandler(WKNavigationActionPolicyAllow);
-        return;
-    }
-
-    if ([urlString rangeOfString:@"scroll://"].location != NSNotFound) {
-        NSInteger position = [[urlString stringByReplacingOccurrencesOfString:@"scroll://" withString:@""] integerValue];
-        if ([self.delegate respondsToSelector:@selector(richTextEditor:didScrollToPosition:)]) {
-            [self.delegate richTextEditor:self didScrollToPosition:position];
-        }
-        decisionHandler(WKNavigationActionPolicyAllow);
-        return;
-    }
-
-    if ([urlString rangeOfString:@"zss-callback/"].location != NSNotFound) {
-        decisionHandler(WKNavigationActionPolicyCancel);
-        return;
-    }
-
     decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     self.editorLoaded = YES;
-
-    __weak typeof(self) weakSelf = self;
-    JSContext *ctx = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-    ctx[@"onInput"] = ^(JSValue *msg) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            if (weakSelf) {
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                [self getHTMLAndTextWithCompletionHandler:^(NSString *html, NSString *text) {
-                    if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
-                        [strongSelf.delegate richTextEditor:strongSelf didChangeText:text html:html];
-                    }
-                    [strongSelf checkForMentionOrHashtagInText:text];
-                }];
-            }
-        }];
-    };
-
-    ctx[@"onFocus"] = ^(JSValue *msg) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            if (weakSelf) {
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                [strongSelf performSelector:@selector(relayoutHack) withObject:nil afterDelay:0.1];
-            }
-        }];
-    };
-
-    ctx[@"onContentHeightChange"] = ^(JSValue *msg) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            if (weakSelf) {
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeContentHeight:)]) {
-                    CGFloat h = ceil([[msg toObject] floatValue]);
-                    [strongSelf.delegate richTextEditor:strongSelf didChangeContentHeight:h];
-                }
-            }
-        }];
-    };
-
-    ctx[@"onCaretYPositionChange"] = ^(JSValue *msg1, JSValue *msg2) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            if (weakSelf) {
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                if ([strongSelf.delegate respondsToSelector:@selector(richTextEditor:didChangeCaretYPostion:lineHeight:)]) {
-                    CGFloat y = ceil([[msg1 toObject] floatValue]);
-                    CGFloat h = ceil([[msg2 toObject] floatValue] * 1.2); // Increase the height of the cursor.
-                    [strongSelf.delegate richTextEditor:self didChangeCaretYPostion:y lineHeight:h];
-                }
-            }
-        }];
-    };
-
-    ctx[@"editorLog"] = ^(JSValue *message) {
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            if (weakSelf) {
-                NSLog(@"Editor: %@", [message toObject]);
-            }
-        }];
-    };
 
     if (!self.internalHTML) {
         self.internalHTML = @"";
@@ -559,6 +475,58 @@
 
     if ([self.delegate respondsToSelector:@selector(richTextEditorDidFinishLoad:)]) {
         [self.delegate richTextEditorDidFinishLoad:self];
+    }
+}
+
+#pragma mark - WKScriptMessageHandler
+
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
+{
+    if (![message.name isEqualToString:@"ports"]) {
+        return;
+    }
+    NSDictionary *body = message.body;
+    if (![body isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    NSString *messageType = body[@"type"];
+    if ([messageType isEqualToString:@"onInput"]) {
+        [self getHTMLAndTextWithCompletionHandler:^(NSString *html, NSString *text) {
+            if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+                [self.delegate richTextEditor:self didChangeText:text html:html];
+            }
+            [self checkForMentionOrHashtagInText:text];
+        }];
+    } else if ([messageType isEqualToString:@"onFocus"]) {
+        [self performSelector:@selector(relayoutHack) withObject:nil afterDelay:0.1];
+    } else if ([messageType isEqualToString:@"onContentHeightChange"]) {
+        if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeContentHeight:)]) {
+            CGFloat h = ceil([body[@"value"] floatValue]);
+            [self.delegate richTextEditor:self didChangeContentHeight:h];
+        }
+    } else if ([messageType isEqualToString:@"onCaretYPositionChange"]) {
+        if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeCaretYPostion:lineHeight:)]) {
+            CGFloat y = ceil([body[@"caretY"] floatValue]);
+            CGFloat h = ceil([body[@"caretHeight"] floatValue] * 1.2); // Increase the height of the cursor.
+            [self.delegate richTextEditor:self didChangeCaretYPostion:y lineHeight:h];
+        }
+    } else if ([messageType isEqualToString:@"editorLog"]) {
+        NSLog(@"Editor: %@", body[@"message"]);
+    } else if ([messageType isEqualToString:@"onScroll"]) {
+        if ([self.delegate respondsToSelector:@selector(richTextEditor:didScrollToPosition:)]) {
+            NSInteger position = [body[@"position"] integerValue];
+            [self.delegate richTextEditor:self didScrollToPosition:position];
+        }
+    } else if ([messageType isEqualToString:@"onToolbarUpdate"]) {
+        [self updateToolBarWithButtonName:body[@"value"]];
+
+        // There could be some changes after this callback and we need to make sure that
+        // we notify about them our delegate.
+        if ([self.delegate respondsToSelector:@selector(richTextEditor:didChangeText:html:)]) {
+            [self getHTMLAndTextWithCompletionHandler:^(NSString *html, NSString *text) {
+                [self.delegate richTextEditor:self didChangeText:text html:html];
+            }];
+        }
     }
 }
 
@@ -758,12 +726,11 @@
     return html;
 }
 
-
-- (NSString *)tidyHTML:(NSString *)html completionHandler:(void (^)(NSString *))completion {
+- (void)tidyHTML:(NSString *)html completionHandler:(void (^)(NSString *))completion {
     // When user stats typing "Foo" then hits enter the html will be "Foo<div><br></div>".
     // We solve it by replacing div and 2 br tags.
     html = [html stringByReplacingOccurrencesOfString:@"<div>" withString:@"<br>"];
-    html = [html stringByReplacingOccurrencesOfString:@"<\/div>" withString:@""];
+    html = [html stringByReplacingOccurrencesOfString:@"</div>" withString:@""];
     html = [html stringByReplacingOccurrencesOfString:@"<br><br>" withString:@"<br>"];
     if (self.formatHTML) {
         NSString *js = [NSString stringWithFormat:@"style_html(\"%@\");", html];

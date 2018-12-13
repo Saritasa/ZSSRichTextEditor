@@ -29,7 +29,7 @@ static Class hackishFixClass = Nil;
     object_setClass(browserView, hackishFixClass);
 
     // This is how we will return the accessory view if we want to
-    // Class normalClass = objc_getClass("UIWebBrowserView");
+    // Class normalClass = objc_getClass("WKContentView");
     // object_setClass(browserView, normalClass);
 
     [browserView reloadInputViews];
@@ -41,7 +41,7 @@ static Class hackishFixClass = Nil;
     UIView *browserView = nil;
     for (UIView *subview in scrollView.subviews) {
         NSString *className = NSStringFromClass([subview class]);
-        if ([className containsString:@"UI"] && [className containsString:@"Web"] && [className containsString:@"Browser"] && [className containsString:@"View"]) {
+        if ([className containsString:@"WK"] && [className containsString:@"Content"] && [className containsString:@"View"]) {
             browserView = subview;
             break;
         }
