@@ -260,8 +260,9 @@
 - (void)focusTextEditor
 {
     if (self.editingEnabled) {
-        NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
-        [self evaluateJavaScript:js];
+        // By default it's not possible to focus on WKWebView programmatically.
+        // NSString *js = [NSString stringWithFormat:@"zss_editor.focusEditor();"];
+        // [self evaluateJavaScript:js];
     }
 }
 
