@@ -35,7 +35,7 @@ static Class hackishFixClass = Nil;
     [browserView reloadInputViews];
 }
 
-- (UIView *)cjw_hackishlyFoundBrowserView {
+- (UIView * _Nullable)cjw_hackishlyFoundBrowserView {
     UIScrollView *scrollView = self.scrollView;
     
     UIView *browserView = nil;

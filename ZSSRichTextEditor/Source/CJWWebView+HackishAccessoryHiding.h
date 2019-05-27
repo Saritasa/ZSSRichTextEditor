@@ -18,6 +18,6 @@
 // Set to a custom view to override. Setting to nil will remove it.
 @property (nonatomic, strong, nullable) UIView *cjw_inputAccessoryView;
 
-- (UIView *)cjw_hackishlyFoundBrowserView;
+- (UIView * _Nullable)cjw_hackishlyFoundBrowserView;
 
 @end
