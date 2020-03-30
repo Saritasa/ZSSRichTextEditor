@@ -217,9 +217,10 @@ zss_editor.calculateEditorHeightWithCaretPosition = function() {
 }
 
 zss_editor.getLineHeight = function() {
-    var lineHeight = window.getComputedStyle(window.document.body).getPropertyValue(
-        'line-height');
-    return parseInt(lineHeight, 10);
+    var editor = window.document.getElementById("zss_editor_content")
+    var lineHeight = window.getComputedStyle(editor).getPropertyValue(
+        'font-size');
+    return parseInt(lineHeight, 10) * 1.2;
 }
 
 zss_editor.backuprange = function() {
